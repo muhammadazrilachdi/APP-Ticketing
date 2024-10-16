@@ -18,28 +18,22 @@ class Priority_model extends CI_Model
     {
         $this->db->select('priority_id, name');
         $this->db->from('priority');
+        $this->db->where('is_deleted', 0);
         $query = $this->db->get();
         return $query->result_array();
     }
-    public function get_priority_name($priority_id)
-    {
-        $this->db->where('priority_id', $priority_id);
-        $query = $this->db->get('priority');
-        $row = $query->row();
-        return $row->name;
-    }
     public function insert($data)
     {
-        $this->db->insert('priority', $data);
+        return $this->db->insert('priority', $data);
     }
     public function update($update_data)
     {
         $this->db->where('priority_id', $update_data['priority_id']);
-        $this->db->update('priority', $update_data);
+        return $this->db->update('priority', $update_data);
     }
     public function delete($priority_id)
     {
         $this->db->where('priority_id', $priority_id);
-        $this->db->delete('priority');
+        return $this->db->update('priority', array('is_deleted' => 1));
     }
 }

@@ -54,6 +54,8 @@ $route['login'] = 'auth/login';
 $route['logout'] = 'auth/logout';
 $route['user/dashboard'] = 'user/dashboard'; // Controller dan method untuk dashboard use
 $route['contact'] = 'dashboard/contact';
+$route['user/request/api_create_request'] = 'user/request/api_create_request';
+$route['ticket/detail/(:any)'] = 'Detail_Ticket/detail_ticket/$1';
 $route['user/profile'] = 'user/profile'; // Controller dan method untuk profile user
 $route['user/dashboard/change_password'] = 'user/dashboard/change_password'; // Untuk proses ubah passwo$route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;

@@ -6,34 +6,53 @@
 <!-- Semantic UI JS -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>
 <script>
     $(document).ready(function() {
+        $('#table-users').DataTable({
+            "ordering": true,
+            "searching": true,
+            "paging": true
+        });
+    });
 
+    $(document).ready(function() {
+        // Inisialisasi modal
         $('.ui.modal').modal();
 
-        var deleteBaseUrl = '<?php echo site_url('admin/category/delete/'); ?>';
-
+        // Event untuk membuka modal create
         $('#openCreateModal').on('click', function() {
             $('#createTicketModal').modal('show');
         });
 
+        // Event untuk tombol edit
+        // Event untuk tombol edit
         $(document).on('click', '.edit-button', function() {
             var categoryId = $(this).data('category-id');
             var categoryName = $(this).data('category-name');
+            var categoryPrefix = $(this).data('category-prefix');
 
             $('#editTicketModal_' + categoryId + ' input[name="category_id"]').val(categoryId);
             $('#editTicketModal_' + categoryId + ' input[name="name"]').val(categoryName);
+            $('#editTicketModal_' + categoryId + ' input[name="prefix"]').val(categoryPrefix);
             $('#editTicketModal_' + categoryId).modal('show');
         });
+
+        // Event untuk tombol delete
         $(document).on('click', '.delete-button', function() {
             var categoryId = $(this).data('category-id');
-            if (confirm('Apakah Anda yakin ingin menghapus kategori ini?')) {
-                window.location.href = deleteBaseUrl + categoryId;
+            if (confirm('Apakah Anda yakin ingin menghapus Category ini?')) {
+                window.location.href = '<?php echo site_url('admin/category/delete/'); ?>' + categoryId;
             }
         });
     });
+
+    $('.detail-button').on('click', function() {
+        var categoryId = $(this).data('category-id');
+        window.location.href = '<?php echo site_url('admin/category/pic/'); ?>' + categoryId;
+    });
+
     document.addEventListener('DOMContentLoaded', function() {
         const masterMenu = document.getElementById('master-menu');
         const masterSubmenu = document.getElementById('master-submenu');

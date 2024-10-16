@@ -6,16 +6,21 @@
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>
 <script>
     $(document).ready(function() {
+        $('#table-users').DataTable({
+            "ordering": true,
+            "searching": true,
+            "paging": true
+        });
+    });
 
+    $(document).ready(function() {
         $('.ui.modal').modal();
 
-        var deleteBaseUrl = '<?php echo site_url('admin/status/delete/'); ?>';
-
-        $('#openCreateModal').on('click', function() {
+        $('#openModal').on('click', function() {
             $('#createTicketModal').modal('show');
         });
 
@@ -27,10 +32,11 @@
             $('#editTicketModal_' + statusId + ' input[name="name"]').val(statusName);
             $('#editTicketModal_' + statusId).modal('show');
         });
+
         $(document).on('click', '.delete-button', function() {
             var statusId = $(this).data('status-id');
-            if (confirm('Apakah Anda yakin ingin menghapus status ini?')) {
-                window.location.href = deleteBaseUrl + statusId;
+            if (confirm('Apakah Anda yakin ingin menghapus Status ini?')) {
+                window.location.href = '<?php echo site_url('admin/status/delete/'); ?>' + statusId;
             }
         });
     });

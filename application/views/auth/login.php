@@ -215,6 +215,12 @@
             font-size: 2em;
             /* Atur ukuran ikon di sini */
         }
+
+        .alert-container {
+            margin-bottom: 13px;
+            text-align: left;
+            width: 80%;
+        }
     </style>
 </head>
 
@@ -228,9 +234,15 @@
         <form method="post" action="<?php echo site_url('auth/process_login'); ?>">
             <div class="login-form">
                 <h2>USER LOGIN</h2>
-                <?php if ($this->session->flashdata('error')): ?>
-                    <p style="color:red;"><?php echo $this->session->flashdata('error'); ?></p>
-                <?php endif; ?>
+                <div class="alert-container">
+                    <div class="ui messages">
+                        <?php if ($this->session->flashdata('error')): ?>
+                            <div class="ui negative message">
+                                <p><?= $this->session->flashdata('error'); ?></p>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                </div>
                 <div class="input-group">
                     <i class="fas fa-user"></i>
                     <input name="email" placeholder="E-mail address" type="text" required />
@@ -256,7 +268,7 @@
         <div class="modal-content" style="width: 300px; padding: 20px;"> <!-- Mengurangi lebar modal -->
             <h2>Lupa Password ?</h2>
             <p>Hubungi Admin Di Bawah Ini Jika Anda Lupa Password/Ingin Jadi Pengguna</p>
-            <a id="contactAdminBtn" href="https://wa.me/6281282150702" class="ui green basic button">
+            <a id="contactAdminBtn" href="https://wa.me/6281282150702" class="ui green basic button" target="_blank">
                 <i class="fab fa-whatsapp" style="font-size: 15px;"></i> Hubungi Admin
             </a>
             <button class=" ui red basic button" id="close-forgot-password">Tutup</button>

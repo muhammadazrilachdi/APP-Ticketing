@@ -14,22 +14,26 @@ class Departement_model extends CI_Model
                    ";
         $departement_id = $this->db->query($queryDepartement)->result_array();
     }
-    public function get_all_departements()
+    public function get_all_departement()
     {
-        return $this->db->get('departement')->result_array();
+        $this->db->select('departement_id, name');
+        $this->db->from('departement');
+        $this->db->where('is_deleted', 0);
+        $query = $this->db->get();
+        return $query->result_array();
     }
     public function insert($data)
     {
-        $this->db->insert('departement', $data);
+        return $this->db->insert('departement', $data);
     }
     public function update($update_data)
     {
         $this->db->where('departement_id', $update_data['departement_id']);
-        $this->db->update('departement', $update_data);
+        return $this->db->update('departement', $update_data);
     }
     public function delete($departement_id)
     {
         $this->db->where('departement_id', $departement_id);
-        $this->db->delete('departement');
+        return $this->db->update('departement', array('is_deleted' => 1));
     }
 }

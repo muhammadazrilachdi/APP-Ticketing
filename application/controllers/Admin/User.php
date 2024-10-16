@@ -7,14 +7,22 @@ class User extends CI_Controller
     {
         parent::__construct();
         $this->load->model('M_user_model');
+        $this->load->model('Departement_model');
         $this->load->library('form_validation');
+        $this->load->library('session');
+        $this->load->helper('url');
         is_logged_in();
     }
 
     public function index()
     {
         $data['title'] = 'User Data';
-        $data['user'] = $this->M_user_model->get_all_m_user();
+        $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+
+        $data['user'] = $this->M_user_model->get_all_user();
+        $data['user'] = $this->db->get_where('user', array('is_deleted' => 0))->result_array();
+        $data['departement_id'] = $this->Departement_model->get_all_departement();
+
         $this->load->view('templates/header', $data);
         $this->load->view('templates/sidebar', $data);
         $this->load->view('templates/topbar', $data);
@@ -29,7 +37,7 @@ class User extends CI_Controller
         $this->form_validation->set_rules('no_hp', 'No Handphone', 'required|numeric');
         $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
         $this->form_validation->set_rules('password', 'Password', 'required');
-        $this->form_validation->set_rules('departement_id', 'Departement ID', 'required|numeric');
+        $this->form_validation->set_rules('departement_id', 'Departement ID', 'required');
         if ($this->form_validation->run() == FALSE) {
             echo validation_errors();
         } else {
@@ -41,14 +49,14 @@ class User extends CI_Controller
                 'no_hp' => $this->input->post('no_hp'),
                 'email' => $this->input->post('email'),
                 'password' => $hashed_password,
-                'departement_id' => $this->input->post('departement_id')
+                'departement_id' => $this->input->post('departement_id'),
+                'created_at' => date('Y-m-d H:i:s')
             ];
             if ($this->M_user_model->insert($data)) {
-                echo "User added successfully";
+                $this->session->set_flashdata('success', 'Data berhasil ditambahkan');
             } else {
-                echo "Failed to add user";
+                $this->session->set_flashdata('error', 'Gagal menambahkan data');
             }
-
             redirect('admin/user');
         }
     }
@@ -57,6 +65,7 @@ class User extends CI_Controller
         $this->form_validation->set_rules('name', 'Nama', 'required');
         $this->form_validation->set_rules('no_hp', 'No Handphone', 'required|numeric');
         $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
+        $this->form_validation->set_rules('departement_id', 'Departement ID', 'required');
 
         if ($this->form_validation->run() == FALSE) {
             $this->session->set_flashdata('errors', validation_errors());
@@ -66,19 +75,23 @@ class User extends CI_Controller
                 'name' => $this->input->post('name'),
                 'no_hp' => $this->input->post('no_hp'),
                 'email' => $this->input->post('email'),
+                'departement_id' => $this->input->post('departement_id'),
+                'created_at' => date('Y-m-d H:i:s')
             ];
             $nik = $this->input->post('nik');
             if ($this->M_user_model->update($nik, $data)) {
-                $this->session->set_flashdata('message', 'User updated successfully');
+                $this->session->set_flashdata('success', 'Data berhasil diupdate');
+                redirect('admin/user');
             } else {
-                $this->session->set_flashdata('message', 'Failed to update user');
+                $this->session->set_flashdata('error', 'Gagal mengupdate data');
+                redirect('admin/user');
             }
-            redirect('admin/user');
         }
     }
     public function delete($nik)
     {
         $this->M_user_model->delete($nik);
+        $this->session->set_flashdata('success', 'User berhasil dihapus');
         redirect('admin/user');
     }
 }

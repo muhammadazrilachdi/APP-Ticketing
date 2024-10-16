@@ -18,28 +18,22 @@ class Status_model extends CI_Model
     {
         $this->db->select('status_id, name');
         $this->db->from('status');
+        $this->db->where('is_deleted', 0);
         $query = $this->db->get();
         return $query->result_array();
     }
-    public function get_status_name($status_id)
-    {
-        $this->db->where('status_id', $status_id);
-        $query = $this->db->get('status');
-        $row = $query->row();
-        return $row->name;
-    }
     public function insert($data)
     {
-        $this->db->insert('status', $data);
+        return $this->db->insert('status', $data);
     }
     public function update($update_data)
     {
         $this->db->where('status_id', $update_data['status_id']);
-        $this->db->update('status', $update_data);
+        return $this->db->update('status', $update_data);
     }
     public function delete($status_id)
     {
         $this->db->where('status_id', $status_id);
-        $this->db->delete('status');
+        return $this->db->update('status', array('is_deleted' => 1));
     }
 }

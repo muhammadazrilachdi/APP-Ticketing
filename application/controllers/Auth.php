@@ -36,6 +36,7 @@ class Auth extends CI_Controller
         if ($user) {
             $this->session->set_userdata('user_id', $user->user_id);
             $this->session->set_userdata('email', $user->email);
+            $this->session->set_userdata('departement_id', $user->departement_id);
 
             if ($user->departement_id == 1) {
                 redirect('admin/transaksi');
@@ -43,7 +44,7 @@ class Auth extends CI_Controller
                 redirect('user/dashboard');
             }
         } else {
-            $this->session->set_flashdata('error', 'Email atau password salah.');
+            $this->session->set_flashdata('error', 'Email atau Password Salah.');
             redirect('auth/login');
         }
     }

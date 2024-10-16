@@ -227,7 +227,57 @@
         }
 
         .modal-content {
-            padding: 20px;
+            width: 90%;
+            max-width: 600px;
+            margin: auto;
+            border: none;
+            /* Menghapus border pada modal */
+            border-radius: 10px;
+            /* Menambahkan sudut melengkung */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            /* Menambahkan bayangan */
+        }
+
+        .modal-header {
+            background-color: #343a40;
+            /* Mengubah ke warna gelap */
+            color: white;
+            padding: 15px;
+            border-top-left-radius: 10px;
+            /* Sudut melengkung atas */
+            border-top-right-radius: 10px;
+            /* Sudut melengkung atas */
+        }
+
+        .modal-title {
+            font-weight: bold;
+            font-size: 1.5em;
+            /* Ukuran font lebih besar */
+        }
+
+        .faq {
+            margin-top: 20px;
+        }
+
+        .faq-question {
+            cursor: pointer;
+            padding: 15px;
+            margin: 5px 0;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            transition: background-color 0.3s;
+        }
+
+        .faq-question:hover {
+            background-color: #e9ecef;
+        }
+
+        .faq-answer {
+            padding: 15px;
+            border-left: 3px solid red;
+            background-color: #f1f1f1;
+            margin-bottom: 10px;
+            border-radius: 5px;
         }
     </style>
 </head>
@@ -268,7 +318,7 @@
             <p>
                 <a href="https://mail.google.com/mail/?view=cm&fs=1&to=muhammad.azril.achdi@gmail.com" class="icon email" target="_blank">
                     <i class="fa-regular fa-envelope"></i>
-                    app.magang@gmail.com
+                    IT.app@gmail.com
                 </a>
 
             </p>
@@ -279,61 +329,57 @@
     </div>
     </div>
     <div class="modal fade" id="helpCenterModal" tabindex="-1" role="dialog" aria-labelledby="helpCenterModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h2 class="modal-title" id="helpCenterModalLabel">Help Center</h2>
                 </div>
                 <div class="modal-body">
 
-                    <div class="faq-question" data-toggle="collapse" data-target="#faq2" aria-expanded="false" aria-controls="faq2">
-                        <strong>1. Bagaimana cara mengajukan tiket?</strong>
-                    </div>
-                    <div id="faq2" class="collapse faq-answer">
-                        <p>Anda dapat mengajukan tiket melalui aplikasi dengan klik request/scroll kebawah dan isi form request atau menghubungi tim support kami.</p>
+                    <div class="faq">
+                        <div class="faq-question" data-toggle="collapse" data-target="#faq1" aria-expanded="false" aria-controls="faq1">
+                            <strong>1. Bagaimana cara mengajukan tiket?</strong>
+                        </div>
+                        <div id="faq1" class="collapse faq-answer">
+                            <p>Anda dapat mengajukan tiket melalui aplikasi dengan klik request/scroll kebawah dan isi form request atau menghubungi tim support kami.</p>
+                        </div>
+
+                        <div class="faq-question" data-toggle="collapse" data-target="#faq2" aria-expanded="false" aria-controls="faq2">
+                            <strong>2. Berapa lama waktu respon untuk tiket saya?</strong>
+                        </div>
+                        <div id="faq2" class="collapse faq-answer">
+                            <p>Waktu respon tergantung pada kompleksitas tiket, namun kami berusaha merespons dalam 24 jam.</p>
+                        </div>
+
+                        <div class="faq-question" data-toggle="collapse" data-target="#faq3" aria-expanded="false" aria-controls="faq3">
+                            <strong>3. Apakah saya dapat melacak status tiket saya?</strong>
+                        </div>
+                        <div id="faq3" class="collapse faq-answer">
+                            <p>Ya, Anda dapat melacak status tiket melalui dashboard pengguna di aplikasi kami.</p>
+                        </div>
+
+                        <div class="faq-question" data-toggle="collapse" data-target="#faq4" aria-expanded="false" aria-controls="faq4">
+                            <strong>4. Apa yang harus dilakukan jika saya tidak menerima balasan?</strong>
+                        </div>
+                        <div id="faq4" class="collapse faq-answer">
+                            <p>Jika Anda tidak menerima balasan dalam waktu 24 jam, silakan hubungi tim dukungan kami untuk mendapatkan bantuan lebih lanjut.</p>
+                        </div>
+
+                        <div class="faq-question" data-toggle="collapse" data-target="#faq5" aria-expanded="false" aria-controls="faq5">
+                            <strong>5. Apakah ada batasan jumlah tiket yang dapat diajukan?</strong>
+                        </div>
+                        <div id="faq5" class="collapse faq-answer">
+                            <p>Tidak ada batasan jumlah tiket yang dapat diajukan. Namun, kami sarankan untuk mengajukan tiket yang relevan dan jelas agar lebih cepat ditangani.</p>
+                        </div>
+
+                        <div class="faq-question" data-toggle="collapse" data-target="#faq6" aria-expanded="false" aria-controls="faq6">
+                            <strong>6. Bagaimana cara mengubah atau membatalkan tiket yang sudah diajukan?</strong>
+                        </div>
+                        <div id="faq6" class="collapse faq-answer">
+                            <p>Anda dapat mengubah atau membatalkan tiket dengan menghubungi tim dukungan kami untuk bantuan lebih lanjut.</p>
+                        </div>
                     </div>
 
-                    <div class="faq-question" data-toggle="collapse" data-target="#faq3" aria-expanded="false" aria-controls="faq3">
-                        <strong>2. Berapa lama waktu respon untuk tiket saya?</strong>
-                    </div>
-                    <div id="faq3" class="collapse faq-answer">
-                        <p>Waktu respon tergantung pada kompleksitas tiket, namun kami berusaha merespons dalam 24 jam.</p>
-                    </div>
-
-                    <div class="faq-question" data-toggle="collapse" data-target="#faq4" aria-expanded="false" aria-controls="faq4">
-                        <strong>3. Apakah saya dapat melacak status tiket saya?</strong>
-                    </div>
-                    <div id="faq4" class="collapse faq-answer">
-                        <p>Ya, Anda dapat melacak status tiket melalui dashboard pengguna di aplikasi kami.</p>
-                    </div>
-
-                    <div class="faq-question" data-toggle="collapse" data-target="#faq5" aria-expanded="false" aria-controls="faq5">
-                        <strong>4. Apa yang harus dilakukan jika saya tidak menerima balasan?</strong>
-                    </div>
-                    <div id="faq5" class="collapse faq-answer">
-                        <p>Jika Anda tidak menerima balasan dalam waktu 24 jam, silakan hubungi tim dukungan kami untuk mendapatkan bantuan lebih lanjut.</p>
-                    </div>
-
-                    <div class="faq-question" data-toggle="collapse" data-target="#faq6" aria-expanded="false" aria-controls="faq6">
-                        <strong>5. Apakah ada batasan jumlah tiket yang dapat diajukan?</strong>
-                    </div>
-                    <div id="faq6" class="collapse faq-answer">
-                        <p>Tidak ada batasan jumlah tiket yang dapat diajukan. Namun, kami sarankan untuk mengajukan tiket yang relevan dan jelas agar lebih cepat ditangani.</p>
-                    </div>
-
-                    <div class="faq-question" data-toggle="collapse" data-target="#faq7" aria-expanded="false" aria-controls="faq7">
-                        <strong>6. Bagaimana cara mengubah atau membatalkan tiket yang sudah diajukan?</strong>
-                    </div>
-                    <div id="faq7" class="collapse faq-answer">
-                        <p>Anda dapat mengubah atau membatalkan tiket dengan menghubungi tim dukungan kami untuk bantuan lebih lanjut.</p>
-                    </div>
-
-                    <div class="faq-question" data-toggle="collapse" data-target="#faq7" aria-expanded="false" aria-controls="faq7">
-                        <strong>7. Bagaimana cara mengubah atau membatalkan tiket yang sudah diajukan?</strong>
-                    </div>
-                    <div id="faq7" class="collapse faq-answer">
-                        <p>Anda dapat mengubah atau membatalkan tiket dengan menghubungi tim dukungan kami untuk bantuan lebih lanjut.</p>
-                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
@@ -341,6 +387,7 @@
             </div>
         </div>
     </div>
+
 
 </body>
 

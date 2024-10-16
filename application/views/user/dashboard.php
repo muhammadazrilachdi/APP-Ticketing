@@ -266,7 +266,9 @@
 
         .footer {
             margin-top: 10px;
-            margin-bottom: -30px;
+            margin-bottom: -60px;
+            margin-left: -50px;
+            margin-right: -50px;
             padding: 20px;
             /* Atur padding atas dan bawah */
             text-align: center;
@@ -337,40 +339,6 @@
             cursor: pointer;
         }
 
-        .status {
-            padding: 5px 10px;
-            /* Ruang dalam */
-            border-radius: 5px;
-            /* Sudut membulat */
-            color: white;
-            /* Warna teks */
-        }
-
-        .status-waiting {
-            background-color: red;
-            /* Contoh warna untuk menunggu antrean */
-            color: black;
-            /* Warna teks untuk kontras */
-            font-style: italic;
-            font-weight: 500;
-        }
-
-        .status-processing {
-            background-color: yellow;
-            /* Contoh warna untuk sedang diproses */
-            color: black;
-            font-style: italic;
-            font-weight: 500;
-        }
-
-        .status-completed {
-            background-color: green;
-            /* Contoh warna untuk selesai */
-            color: black;
-            font-style: italic;
-            font-weight: 500;
-        }
-
         .ticket-title {
             color: black;
             font-size: x-large;
@@ -389,6 +357,28 @@
 
         .field {
             font-size: 15px;
+        }
+
+        .ui.message.animated {
+            animation-duration: 0.5s;
+        }
+
+        .ui.message.animated.fadeIn {
+            animation-name: fadeIn;
+        }
+
+        .checkmark.icon {
+            font-size: 24px;
+            margin-right: 10px;
+            color: #34C759;
+            /* green color */
+        }
+
+        .times.icon {
+            font-size: 24px;
+            margin-right: 10px;
+            color: #FF69B4;
+            /* red color */
         }
     </style>
 </head>
@@ -424,23 +414,23 @@
 
         <!-- Modal -->
         <div id="alertModal" class="modal">
-            <div class="modal-content-custom">
+            <div class="modal-content-custom" style="padding: 20px; width: 300px; height: 300px;">
                 <span class="close-button">&times;</span>
                 <?php if (!empty($message)): ?>
-                    <div class="ui negative message">
+                    <div class="ui negative message animated fadeIn">
                         <p><?php echo $message; ?></p>
                     </div>
                 <?php endif; ?>
-
                 <?php if ($this->session->flashdata('success')): ?>
-                    <div class="ui success message">
+                    <div class="ui success message animated fadeIn">
+                        <i class="checkmark icon green"></i>
                         <p><?php echo $this->session->flashdata('success'); ?></p>
-                        <p><a href="#services" id="statusLink">Klik Disini Untuk Lihat Status</a></p>
+                        <p><a href="#services" id="statusLink">Klik Disini Untuk Lihat Status Dan No.Status</a></p>
                     </div>
                 <?php endif; ?>
-
                 <?php if ($this->session->flashdata('error')): ?>
-                    <div class="ui negative message">
+                    <div class="ui negative message animated fadeIn">
+                        <i class="times icon red"></i>
                         <p><?php echo $this->session->flashdata('error'); ?></p>
                     </div>
                 <?php endif; ?>
@@ -479,11 +469,14 @@
             <table class="ui celled table" style="margin-top: 20px;">
                 <thead>
                     <tr>
+                        <th>No Ticket</th>
+                        <th>ID Request</th>
                         <th>Category</th>
                         <th>Priority</th>
-                        <th>Status</th>
                         <th>Topic</th>
                         <th>Description</th>
+                        <th>Status</th>
+                        <th>Feedback</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -491,40 +484,58 @@
                     $request = $this->Request_model->get_request_by_user($_SESSION['user_id']);
                     if (empty($request)) : ?>
                         <tr>
-                            <td colspan="5" style="text-align: center;">Tidak ada tiket yang tersedia.</td>
+                            <td colspan="7" style="text-align: center;">Tidak ada tiket yang tersedia.</td>
                         </tr>
                         <?php else:
+                        // Mapping status_id ke nama status
+                        $statusMap = [
+                            '1' => 'Menunggu Antrean',
+                            '2' => 'Sedang Diproses',
+                            '3' => 'Selesai'
+                        ];
+
                         foreach ($request as $row) :
-                            // Dapatkan nama status
-                            $statusName = $this->Status_model->get_status_name($row['status_id']);
-                            // Tentukan kelas berdasarkan status
-                            $statusClass = '';
-                            switch ($statusName) {
+                            $statusNameValue = isset($statusMap[$row['status_id']]) ? $statusMap[$row['status_id']] : 'Status Tidak Ditemukan';
+
+                            $statusColor = 'gray';
+                            switch ($statusNameValue) {
                                 case 'Menunggu Antrean':
-                                    $statusClass = 'status-waiting';
+                                    $statusColor = 'red';
                                     break;
                                 case 'Sedang Diproses':
-                                    $statusClass = 'status-processing';
+                                    $statusColor = 'yellow';
                                     break;
                                 case 'Selesai':
-                                    $statusClass = 'status-completed';
+                                    $statusColor = 'green';
                                     break;
                             }
+
+                            // Pastikan status ditampilkan dengan benar
+                            $statusNameDisplay = htmlspecialchars($statusNameValue);
                         ?>
                             <tr>
-                                <td><?php echo $row['category_id'] ? $this->Category_model->get_category_name($row['category_id']) : 'Kategori tidak ada'; ?></td>
-                                <td><?php echo $row['priority_id'] ? $this->Priority_model->get_priority_name($row['priority_id']) : 'Prioritas tidak ada'; ?></td>
                                 <td>
-                                    <span class="status <?php echo $statusClass; ?>"><?php echo $statusName; ?></span>
+                                    <a
+                                        href="<?php echo site_url('user/request/detail_ticket/' . $row['no_ticket']); ?>" class="ui button">
+                                        <?php echo htmlspecialchars($row['no_ticket']); ?>
+                                    </a>
                                 </td>
-                                <td><?php echo $row['topic']; ?></td>
-                                <td><?php echo $row['description']; ?></td>
+                                <td><?php echo htmlspecialchars($row['user_name']); ?></td>
+                                <td><?php echo htmlspecialchars($row['category_name']); ?></td>
+                                <td><?php echo htmlspecialchars($row['priority_name']); ?></td>
+                                <td><?php echo htmlspecialchars($row['topic']); ?></td>
+                                <td><?php echo htmlspecialchars($row['description']); ?></td>
+                                <td>
+                                    <span style="padding: 5px 10px; background-color: <?php echo $statusColor; ?>; color: black; font-weight: bold; border-radius: 5px; font-size: 16px; font-style: italic; display: inline-block;">
+                                        <?php echo $statusNameDisplay; ?>
+                                    </span>
+                                </td>
+                                <td><?php echo htmlspecialchars($row['feedback']); ?></td>
                             </tr>
                     <?php endforeach;
                     endif; ?>
                 </tbody>
             </table>
-
 
             <div class="container-fluid bg-grey">
                 <div class="row">
@@ -532,10 +543,12 @@
                         <div class="ui segment custom">
                             <h3 class="ticket-title">Buat Ticket Baru</h3>
                             <p class="ticket-teks">Isi formulir di bawah ini untuk membuat ticket baru. Pastikan semua informasi yang diberikan akurat.</p>
-                            <form id="request-form" class="ui form" method="post" action="<?php echo site_url('user/request/create_request'); ?>" onsubmit="return handleFormSubmit();">
+                            <form id="request-form" class="ui form" method="post" action="<?php echo site_url('user/request/create_request'); ?>" enctype="multipart/form-data">
+                                <!-- ... field lainnya ... -->
                                 <div class="field">
                                     <label>Kategori</label>
                                     <select name="category_id" class="ui dropdown" required>
+                                        <option value="0">--Pilih-Kategori-Anda--</option>
                                         <?php foreach ($category as $cat) { ?>
                                             <option value="<?php echo $cat['category_id']; ?>"><?php echo $cat['name']; ?></option>
                                         <?php } ?>
@@ -546,6 +559,7 @@
                                 <div class="field">
                                     <label>Prioritas</label>
                                     <select name="priority_id" class="ui dropdown" required>
+                                        <option value="0">--Pilih-Prioritas-Anda--</option>
                                         <?php foreach ($priority as $pri) { ?>
                                             <option value="<?php echo $pri['priority_id']; ?>"><?php echo $pri['name']; ?></option>
                                         <?php } ?>
@@ -563,6 +577,11 @@
                                     <label>Deskripsi</label>
                                     <textarea name="description" rows="3" required></textarea>
                                     <small class="ui pointing label">Jelaskan masalah Anda secara rinci.</small>
+                                </div>
+                                <div class="field">
+                                    <label>Lampiran</label>
+                                    <input type="file" name="lampiran" id="lampiran" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+                                    <small class="ui pointing label">Upload file pendukung (opsional). Max 2MB.</small>
                                 </div>
 
                                 <button class="ui secondary button" type="submit">Submit</button>
@@ -618,6 +637,55 @@
                     }
 
                 }
+                document.getElementById('lampiran').addEventListener('change', function(e) {
+                    var file = e.target.files[0];
+                    var fileInfo = document.getElementById('file-info');
+
+                    if (file) {
+                        // Cek ukuran file (dalam bytes)
+                        if (file.size > 2 * 1024 * 1024) { // 2MB
+                            fileInfo.innerHTML = '<p style="color: red;">File terlalu besar. Maksimum 2MB.</p>';
+                            e.target.value = ''; // Reset input file
+                        } else {
+                            fileInfo.innerHTML = '<p>File yang dipilih: ' + file.name + ' (' + (file.size / 1024).toFixed(2) + ' KB)</p>';
+                        }
+                    } else {
+                        fileInfo.innerHTML = '';
+                    }
+                });
+                document.addEventListener('DOMContentLoaded', function() {
+                    document.getElementById('request-form').addEventListener('submit', function(e) {
+                        e.preventDefault();
+
+
+                        var form = this;
+                        var isValid = true;
+                        form.querySelectorAll('input[required], select[required], textarea[required]').forEach(function(element) {
+                            if (!element.value.trim()) {
+                                isValid = false;
+                                element.classList.add('error');
+                            } else {
+                                element.classList.remove('error');
+                            }
+                        });
+
+                        if (!isValid) {
+                            alert('Semua field wajib diisi!');
+                            return;
+                        }
+
+                        // Validasi ukuran file
+                        var fileInput = document.getElementById('lampiran');
+                        if (fileInput.files.length > 0) {
+                            if (fileInput.files[0].size > 2 * 1024 * 1024) {
+                                alert('Ukuran file terlalu besar. Maksimum 2MB.');
+                                return;
+                            }
+                        }
+
+                        form.submit();
+                    });
+                });
 
                 function confirmLogout(event) {
                     event.preventDefault(); // Prevent the default anchor action
@@ -719,7 +787,6 @@
                     });
                 });
             </script>
-
 </body>
 
 </html>

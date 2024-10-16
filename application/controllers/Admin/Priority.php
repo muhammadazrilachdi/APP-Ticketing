@@ -7,6 +7,8 @@ class Priority extends CI_Controller
     {
         parent::__construct();
         $this->load->model('Priority_model');
+        $this->load->library('session');
+        $this->load->helper('url');
         is_logged_in();
     }
 
@@ -17,9 +19,7 @@ class Priority extends CI_Controller
         $this->session->userdata('email')])->row_array();
 
         $data['priority_id'] = $this->Priority_model->get_all_priority();
-
-        $data['priority_id'] = $this->db->get('priority')->result_array();
-
+        $data['priority_id'] = $this->db->get_where('priority', array('is_deleted' => 0))->result_array();
 
         $this->load->view('templates/header', $data);
         $this->load->view('templates/sidebar', $data);
@@ -30,17 +30,20 @@ class Priority extends CI_Controller
 
     public function process_tambah()
     {
-        $this->form_validation->set_rules('priority_id', 'Priority ID', 'required');
         $this->form_validation->set_rules('name', 'Nama Priority', 'required');
 
         if ($this->form_validation->run() == FALSE) {
             $this->index();
         } else {
             $data = [
-                'priority_id' => $this->input->post('priority_id'),
-                'name' => $this->input->post('name')
+                'name' => $this->input->post('name'),
+                'created_at' => date('Y-m-d H:i:s'),
             ];
-            $this->Priority_model->insert($data);
+            if ($this->Priority_model->insert($data)) {
+                $this->session->set_flashdata('success', 'Data berhasil ditambahkan');
+            } else {
+                $this->session->set_flashdata('error', 'Gagal menambahkan data');
+            }
             redirect('admin/priority');
         }
     }
@@ -59,8 +62,11 @@ class Priority extends CI_Controller
                 'priority_id' => $priority_id,
                 'name' => $name
             );
-
-            $this->Priority_model->update($update_data);
+            if ($this->Priority_model->update($update_data)) {
+                $this->session->set_flashdata('success', 'Data berhasil diupdate');
+            } else {
+                $this->session->set_flashdata('error', 'Gagal mengupdate data');
+            }
             redirect('admin/priority');
         }
     }
@@ -68,6 +74,7 @@ class Priority extends CI_Controller
     public function delete($priority_id)
     {
         $this->Priority_model->delete($priority_id);
+        $this->session->set_flashdata('success', 'Priority berhasil dihapus');
         redirect('admin/priority');
     }
 }

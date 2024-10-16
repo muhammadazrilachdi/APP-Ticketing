@@ -6,9 +6,24 @@
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>
 <script>
+    $(document).ready(function() {
+        $('#table-users').DataTable({
+            "ordering": true,
+            "searching": true,
+            "paging": true
+        });
+    });
+
+    $(document).ready(function() {
+        $('.select2').select2({
+            allowClear: false
+        });
+    });
+
     $(document).ready(function() {
         $('.edit-button').on('click', function() {
             const userId = $(this).data('user-id');
@@ -68,6 +83,24 @@
             }
         });
     });
+    document.addEventListener('DOMContentLoaded', function() {
+        const toggleSidebar = document.getElementById('toggle-sidebar');
+        const sidebar = document.querySelector('.sidebar');
+        const body = document.body;
+
+        toggleSidebar.addEventListener('click', function() {
+            if (sidebar.style.display === "none" || sidebar.style.display === "") {
+                sidebar.style.display = "block"; // Tampilkan sidebar
+                body.classList.remove('sidebar-hidden');
+                toggleSidebar.innerHTML = '<i class="fa-solid fa-bars"></i>';
+            } else {
+                sidebar.style.display = "none"; // Tutup sidebar
+                body.classList.add('sidebar-hidden');
+                toggleSidebar.innerHTML = '<i class="fa-solid fa-bars"></i>';
+            }
+        });
+    });
+
 
     function fetchStatistics() {
         fetch('<?php echo site_url('dashboard/get_statistics'); ?>')

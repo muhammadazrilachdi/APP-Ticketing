@@ -7,6 +7,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>
 <script>
     $(document).ready(function() {
@@ -18,40 +19,44 @@
     });
 
     $(document).ready(function() {
-        $('.ui.modal').modal();
-
-        $('#openModal').on('click', function() {
-            $('#createTicketModal').modal('show');
-        });
-
-        $(document).on('click', '.edit-button', function() {
-            var departementId = $(this).data('departement-id');
-            var departementName = $(this).data('departement-name');
-
-            $('#editTicketModal_' + departementId + ' input[name="departement_id"]').val(departementId);
-            $('#editTicketModal_' + departementId + ' input[name="name"]').val(departementName);
-            $('#editTicketModal_' + departementId).modal('show');
-        });
-
-        $(document).on('click', '.delete-button', function() {
-            var departementId = $(this).data('departement-id');
-            if (confirm('Apakah Anda yakin ingin menghapus Departement ini?')) {
-                window.location.href = '<?php echo site_url('admin/departement/delete/'); ?>' + departementId;
-            }
+        $('.select2').select2({
+            placeholder: "Pilih Kategori",
+            allowClear: false
         });
     });
-    document.addEventListener('DOMContentLoaded', function() {
-        const masterMenu = document.getElementById('master-menu');
-        const masterSubmenu = document.getElementById('master-submenu');
 
-        // Toggle submenu visibility when the Master menu is clicked
-        masterMenu.addEventListener('click', function() {
-            if (masterSubmenu.style.display === "none" || masterSubmenu.style.display === "") {
-                masterSubmenu.style.display = "block"; // Show the submenu
-            } else {
-                masterSubmenu.style.display = "none"; // Hide the submenu
-            }
-        });
+    // Edit PIC
+    $(document).on('click', '.edit-button', function() {
+        var category_pic_id = $(this).data('category-pic-id');
+        var category_id = $(this).data('category-id');
+        var userId = $(this).data('user-id');
+
+        $('#editPicModal input[name="category_pic_id"]').val(category_pic_id);
+        $('#editPicModal select[name="category_id"]').val(category_id);
+        $('#editPicModal select[name="user_id"]').val(userId);
+        $('#editPicModal').modal('show');
+    });
+    // Delete PIC
+    $(document).on('click', '.delete-button', function() {
+        var category_pic_id = $(this).data('category-pic-id');
+        var category_id = $(this).data('category-id');
+        if (confirm('Apakah Anda yakin ingin menghapus data ini?')) {
+            window.location.href = '<?php echo site_url('admin/category/pic_delete/'); ?>' + category_pic_id + '?category_id=' + category_id;
+        }
+    });
+
+    // Aktifkan PIC
+    $(document).on('click', '.aktifkan-button', function() {
+        var category_pic_id = $(this).data('category-pic-id');
+        var category_id = $(this).data('category-id');
+        window.location.href = '<?php echo site_url('admin/category/aktifkan_pic/'); ?>' + category_pic_id + '?category_id=' + category_id;
+    });
+
+    // Nonaktifkan PIC
+    $(document).on('click', '.nonaktifkan-button', function() {
+        var category_pic_id = $(this).data('category-pic-id');
+        var category_id = $(this).data('category-id');
+        window.location.href = '<?php echo site_url('admin/category/nonaktifkan_pic/'); ?>' + category_pic_id + '?category_id=' + category_id;
     });
 
     function fetchStatistics() {
@@ -71,6 +76,7 @@
         event.preventDefault(); // Prevent the default anchor action
         $('#logout-message').fadeIn(); // Show the logout confirmation
     }
+
     // Panggil fungsi fetchStatistics saat halaman dimuat
     window.onload = function() {
         fetchStatistics();

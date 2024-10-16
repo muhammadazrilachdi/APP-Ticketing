@@ -14,5 +14,5 @@
         <li><a href="<?php echo site_url('admin/priority/index'); ?>"><i class="caret right icon"></i>Priority</a></li>
     </ul>
 
-    <a class="nav-link" href="<?php echo site_url('auth/logout'); ?>"><i class="fas fa-sign-out-alt"></i>Logout</a>
+    <a class="nav-link" href="#" onclick="if(confirm('Apakah Anda yakin ingin logout?')) { window.location.href = '<?php echo site_url('auth/logout'); ?>'; }"><i class="fas fa-sign-out-alt"></i>Logout</a>
 </div>

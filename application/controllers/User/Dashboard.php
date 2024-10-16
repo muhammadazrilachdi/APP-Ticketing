@@ -11,6 +11,9 @@ class Dashboard extends CI_Controller
         $this->load->model('Category_model');
         $this->load->model('Priority_model');
         $this->load->model('Status_model');
+        $this->load->model('M_user_model');
+        $this->load->library('session');
+        $this->load->helper('url');
         is_logged_in();
     }
 
@@ -20,8 +23,8 @@ class Dashboard extends CI_Controller
         $data['user'] = $this->db->get_where('user', ['email' =>
         $this->session->userdata('email')])->row_array();
 
+        $data['request'] = $this->M_user_model->get_user_request();
         $data['request'] = $this->Request_model->get_all_request();
-
         $data['category'] = $this->Category_model->get_all_category();
         $data['priority'] = $this->Priority_model->get_all_priority();
         $data['status'] = $this->Status_model->get_all_status();
@@ -33,7 +36,6 @@ class Dashboard extends CI_Controller
     {
         $this->load->view('user/contact'); // Ganti dengan nama view sesuai jika berbeda
     }
-
     public function profile()
     {
         $user_email = $this->session->userdata('email');

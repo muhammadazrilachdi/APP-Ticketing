@@ -6,9 +6,18 @@
 <!-- Semantic UI JS -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>
 <script>
+    $(document).ready(function() {
+        $('#table-users').DataTable({
+            "ordering": true,
+            "searching": true,
+            "paging": true
+        });
+    });
+
+
     $(document).ready(function() {
 
         $('.ui.modal').modal();

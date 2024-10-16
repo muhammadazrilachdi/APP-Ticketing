@@ -8,7 +8,21 @@
             </button>
         </div>
     </div>
-    <table class="ui celled table" style="margin-top: 20px;">
+    <div class="alert-container">
+        <div class="ui messages">
+            <?php if ($this->session->flashdata('error')): ?>
+                <div class="ui negative message">
+                    <p><?= $this->session->flashdata('error'); ?></p>
+                </div>
+            <?php endif; ?>
+            <?php if ($this->session->flashdata('success')): ?>
+                <div class="ui positive message">
+                    <p><?= $this->session->flashdata('success'); ?></p>
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
+    <table class="display" style="margin-top: 20px;" id="table-users">
         <thead>
             <tr>
                 <th>Nama</th>
@@ -24,7 +38,7 @@
                     <td><?= htmlspecialchars($u['no_hp']); ?></td>
                     <td><?= htmlspecialchars($u['email']); ?></td>
                     <td>
-                        <button class="ui button edit-button" data-user-id="<?= $u['nik']; ?>" data-user-name="<?= htmlspecialchars($u['name']); ?>" data-user-nohp="<?= htmlspecialchars($u['no_hp']); ?>" data-user-email="<?= htmlspecialchars($u['email']); ?>">Edit</button>
+                        <button class="ui olive button edit-button" data-user-id="<?= $u['nik']; ?>" data-user-name="<?= htmlspecialchars($u['name']); ?>" data-user-nohp="<?= htmlspecialchars($u['no_hp']); ?>" data-user-email="<?= htmlspecialchars($u['email']); ?>">Edit</button>
                         <button class="ui button negative delete-button" data-user-id="<?= $u['nik']; ?>">Hapus</button>
                     </td>
                 </tr>
@@ -60,8 +74,13 @@
                 <input type="password" name="password" placeholder="Masukkan Password" required>
             </div>
             <div class="field">
-                <label>Departement ID</label>
-                <input type="number" name="departement_id" placeholder="Masukkan Departement ID" required>
+                <label>Departemen</label>
+                <select name="departement_id" class="select2" style="width: 100%;" required>
+                    <option value="">Pilih Departemen</option>
+                    <?php foreach ($departement_id as $dep) : ?>
+                        <option value="<?php echo $dep['departement_id']; ?>"><?php echo $dep['name']; ?></option>
+                    <?php endforeach; ?>
+                </select>
             </div>
             <div class="actions">
                 <button type="button" class="ui button" onclick="$('#createUserModal').modal('hide');">Batal</button>
@@ -89,6 +108,15 @@
             <div class="field">
                 <label>Email</label>
                 <input type="email" name="email" id="edit-email" placeholder="Masukkan Email" required>
+            </div>
+            <div class="field">
+                <label>Departemen</label>
+                <select name="departement_id" class="select2" style="width: 100%;" required>
+                    <option value="">Pilih Departemen</option>
+                    <?php foreach ($departement_id as $dep) : ?>
+                        <option value="<?php echo $dep['departement_id']; ?>"><?php echo $dep['name']; ?></option>
+                    <?php endforeach; ?>
+                </select>
             </div>
             <div class="actions">
                 <button type="button" class="ui button" onclick="$('#editUserModal').modal('hide');">Batal</button>

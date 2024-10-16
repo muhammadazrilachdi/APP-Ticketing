@@ -1,29 +1,41 @@
-<!DOCTYPE html>
-<html lang="en">
-
 <head>
-    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo htmlspecialchars($title); ?></title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css">
     <link rel="shortcut icon" href="<?= base_url('asset/images/persada.png'); ?>" type="image/png" />
     <style>
-        html,
-        body {
-            height: 100%;
-            margin: 0;
-            padding: 0;
-            background-color: rgb(240, 240, 240);
+        * {
+            box-sizing: border-box;
         }
 
-        .select2 {
-            width: 100%;
-            /* Mengatur lebar penuh dari elemen induk */
+        html,
+        body {
+            min-height: 100vh;
+            height: 100%;
+            margin: 0;
+            padding-bottom: 60px;
+            /* Sesuaikan dengan tinggi footer */
+            background-color: #f8f9fa;
+            /* Latar belakang */
+        }
+
+        .container {
+            margin-top: 60px;
+            /* Sesuaikan dengan tinggi top bar */
+        }
+
+        .content-container {
+            margin-left: 222px;
+            /* Sesuaikan dengan lebar sidebar */
+            width: calc(100% - 222px);
+            /* Kurangi lebar sidebar */
+            padding: 20px;
         }
 
         .top-bar {
@@ -39,7 +51,6 @@
             top: 0;
             left: 0;
             z-index: 1001;
-            box-sizing: border-box;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         }
 
@@ -89,7 +100,7 @@
         }
 
         .sidebar {
-            background: #2F4F4F;
+            background: linear-gradient(to bottom right, #36454F, #36454F);
             color: #fff;
             width: 222px;
             height: 100%;
@@ -97,27 +108,15 @@
             top: 40px;
             left: 0;
             padding: 20px 0;
-            box-sizing: border-box;
             display: flex;
             flex-direction: column;
             align-items: flex-start;
             z-index: 1000;
-            background: linear-gradient(to bottom right, #36454F, #36454F);
         }
 
-        .sidebar .sidebar-text {
-            margin: 50px;
-            font-size: 1em;
-            color: #fff;
-            text-align: center;
-        }
-
-        .sidebar .logo-separator {
-            width: 222px;
-            height: 1px;
-            background: #424A4D;
-            margin-right: 5px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        .sidebar .sidebar-logo {
+            width: 200px;
+            margin: 0 auto 20px;
         }
 
         .sidebar .nav-link {
@@ -139,7 +138,6 @@
             text-decoration: underline;
         }
 
-        /* Tambahkan kelas .sidebar-toggle pada tombol toggle */
         .sidebar-toggle {
             position: absolute;
             top: 0;
@@ -152,10 +150,6 @@
             align-items: center;
             justify-content: center;
             transition: transform 0.3s ease;
-        }
-
-        .sidebar-toggle i {
-            font-size: 24px;
         }
 
         .sidebar-hide {
@@ -174,7 +168,6 @@
 
         .sub-menu li {
             margin: 10px 0;
-            margin-left: 5px;
         }
 
         .sub-menu a {
@@ -196,12 +189,6 @@
             transform: rotate(180deg);
         }
 
-        .sidebar .sidebar-logo {
-            width: 200px;
-            margin: 0 auto;
-            margin-bottom: 20px;
-        }
-
         .main-content {
             margin-left: 220px;
             margin-top: 40px;
@@ -220,48 +207,7 @@
             /* Menempatkan teks di tengah */
         }
 
-        /* Mengatur padding dan margin untuk memastikan elemen tidak memiliki ruang kosong */
-        .ui.segment {
-            padding: 10px;
-            /* Mengurangi padding di dalam segment */
-        }
-
-        .header-container {
-            display: flex;
-            /* Menggunakan flexbox untuk penataan */
-            justify-content: space-between;
-            /* Mengatur elemen agar tersebar dengan jarak yang sama */
-            align-items: center;
-            /* Menyusun elemen secara vertikal di tengah */
-        }
-
-        .ui.right.aligned.category.search {
-            display: flex;
-            /* Menggunakan flexbox untuk penataan dalam search-container */
-            align-items: center;
-            /* Menyusun elemen secara vertikal di tengah */
-        }
-
-        .ui.icon.input.small-search {
-            max-width: 200px;
-            /* Atur lebar maksimal pencarian */
-            width: auto;
-            /* Penuhi lebar kontainer jika kurang dari max-width */
-            margin-left: 10px;
-            /* Jarak antara input pencarian dan tombol Add User */
-        }
-
-        .ui.icon.input.small-search input.prompt {
-            padding: 5px 10px;
-            font-size: 14px;
-            /* Ukuran font input pencarian */
-        }
-
-        .ui.icon.input.small-search i.search.icon {
-            margin-left: 5px;
-        }
-
-        /* CSS untuk modal */
+        /* Gaya untuk modal */
         .ui.modal.custom {
             width: 400px;
             /* Atur lebar modal sesuai kebutuhan */
@@ -273,7 +219,6 @@
             /* Jarak internal di dalam modal */
         }
 
-        /* Gaya untuk header modal agar lebih kecil dan kotak */
         .ui.modal.custom .header {
             font-size: 1.2em;
             /* Ukuran font header modal */
@@ -285,8 +230,6 @@
         }
 
         /* Tampilan modern untuk card */
-
-        /* Tampilan modern untuk card dengan lebar yang lebih besar */
         .ui.card {
             background-color: #fff;
             border-radius: 15px;
@@ -344,19 +287,6 @@
             margin: 10px;
         }
 
-        @keyframes fadeIn {
-            0% {
-                opacity: 0;
-                transform: scale(0.8);
-            }
-
-            100% {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-
-
         footer {
             color: #6C757D;
             text-align: center;
@@ -399,6 +329,164 @@
         .CustomRed {
             background-color: #FFC080;
             color: #333;
+        }
+
+        /* Flexbox untuk pengaturan */
+        .flex-container {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* Penataan detail tiket */
+        .section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin: 10px;
+            flex: 2;
+        }
+
+        .header {
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+
+        .status-value {
+            padding: 8px;
+            border-radius: 4px;
+            margin-left: 10px;
+            /* Jarak antara label dan status */
+        }
+
+        .label {
+            font-weight: bold;
+            color: black;
+            font-size: 16px;
+            margin-right: 10px;
+            /* Jarak antara label dan nilai */
+        }
+
+        .field-value {
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            max-width: 100%;
+        }
+
+        .field-container {
+            margin-bottom: 15px;
+            /* Jarak antara field atas dan bawah */
+        }
+
+        .field-container.status-field {
+            margin-bottom: 30px;
+            /* Jarak tambahan khusus untuk status */
+        }
+
+        .flex-container>.section {
+            flex: 1;
+            margin-right: 10px;
+        }
+
+        .flex-container>.section:last-child {
+            margin-right: 0;
+        }
+
+        .custom-nav {
+            background-color: rgba(255, 0, 0, 0.7);
+            border-radius: 30px 30px 10px 10px;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .custom-nav li {
+            position: relative;
+            float: left;
+        }
+
+        .custom-nav li a {
+            color: #007bff;
+            font-size: 14px;
+            text-decoration: none;
+            padding: 15px 20px;
+            display: inline-block;
+        }
+
+        .custom-nav li a::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: -5px;
+            width: 0;
+            height: 2px;
+            background-color: #007bff;
+            transition: width 0.4s ease, left 0.4s ease;
+        }
+
+        .navbar {
+            margin-bottom: 0;
+            background-color: transparent;
+            border: 0;
+            font-size: 10px !important;
+            border-radius: 0;
+            font-family: Montserrat, sans-serif;
+            padding: 0;
+            width: 500px;
+        }
+
+        .navbar.scrolled {
+            background-color: transparent !important;
+        }
+
+        .navbar.scrolled li a,
+        .navbar.scrolled .navbar-brand {
+            color: black !important;
+        }
+
+        .navbar li a,
+        .navbar .navbar-brand {
+            color: white !important;
+        }
+
+        .navbar-nav li a:hover,
+        .navbar-nav li.active a {
+            color: white !important;
+            background-color: rgba(255, 0, 0, 0.5) !important;
+            border-radius: 30px 30px 10px 10px;
+        }
+
+        /* Media Queries */
+        @media (max-width: 768px) {
+            .content-container {
+                margin-left: 0;
+                width: 100%;
+            }
+
+            .flex-container {
+                flex-direction: column;
+            }
+
+            .section {
+                margin: 10px 0;
+            }
+
+            footer {
+                width: 100%;
+                left: 0;
+            }
+        }
+
+        /* Animasi */
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
     </style>
 </head>

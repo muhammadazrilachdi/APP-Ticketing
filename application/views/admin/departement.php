@@ -8,10 +8,23 @@
             </button>
         </div>
     </div>
-    <table class="ui celled table" style="margin-top: 20px;">
+    <div class="alert-container">
+        <div class="ui messages">
+            <?php if ($this->session->flashdata('error')): ?>
+                <div class="ui negative message">
+                    <p><?= $this->session->flashdata('error'); ?></p>
+                </div>
+            <?php endif; ?>
+            <?php if ($this->session->flashdata('success')): ?>
+                <div class="ui positive message">
+                    <p><?= $this->session->flashdata('success'); ?></p>
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
+    <table class="display" style="margin-top: 20px;" id="table-users">
         <thead>
             <tr>
-                <th>Departement</th>
                 <th>Nama</th>
                 <th>Aksi</th>
             </tr>
@@ -19,10 +32,9 @@
         <tbody>
             <?php foreach ($departement_id as $d) : ?>
                 <tr>
-                    <td><?= $d['departement_id']; ?></td>
                     <td><?= $d['name']; ?></td>
                     <td>
-                        <button class="ui button edit-button" data-departement-id="<?php echo $d['departement_id']; ?>" data-departement-name="<?php echo htmlspecialchars($d['name']); ?>">Edit</button>
+                        <button class="ui olive button edit-button" data-departement-id="<?php echo $d['departement_id']; ?>" data-departement-name="<?php echo htmlspecialchars($d['name']); ?>">Edit</button>
                         <button class="ui button negative delete-button" data-departement-id="<?php echo $d['departement_id']; ?>">Hapus</button>
                     </td>
                 </tr>
@@ -36,11 +48,7 @@
     <i class="close icon"></i>
     <div class="header">Buat Departement Baru</div>
     <div class="content">
-        <form class="ui form" method="post" action="<?php echo site_url('admin/departement/process_tambah'); ?>"> <!-- Ganti dengan URL sesuai -->
-            <div class="field">
-                <label>Departement ID</label>
-                <input type="number" name="departement_id" placeholder="Masukkan Departement ID" required>
-            </div>
+        <form class="ui form" method="post" action="<?php echo site_url('admin/departement/process_tambah'); ?>">
             <div class="field">
                 <label>Nama Departement</label>
                 <input type="text" name="name" placeholder="Masukkan Nama Departement" required>
@@ -60,12 +68,9 @@
         <div class="content">
             <form class="ui form" method="post" action="<?php echo site_url('admin/departement/process_edit'); ?>">
                 <div class="field">
-                    <label>Departement ID</label>
-                    <input type="number" name="departement_id" value="<?php echo htmlspecialchars($d['departement_id']); ?>" placeholder="Masukkan Departement ID" required>
-                </div>
-                <div class="field">
                     <label>Nama Departement</label>
                     <input type="text" name="name" value="<?php echo htmlspecialchars($d['name']); ?>" placeholder="Masukkan Nama Departement" required>
+                    <input type="hidden" name="departement_id" value="<?php echo $d['departement_id']; ?>">
                 </div>
                 <div class="actions">
                     <button type="button" class="ui button" onclick="$('#editTicketModal_<?php echo $d['departement_id']; ?>').modal('hide');">Batal</button>

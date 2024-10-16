@@ -14,32 +14,31 @@ class Category_model extends CI_Model
                    ";
         $category_id = $this->db->query($queryCategory)->result_array();
     }
+    public function get_category_by_id($category_id)
+    {
+        $this->db->where('category_id', $category_id);
+        return $this->db->get('category')->row();
+    }
     public function get_all_category()
     {
         $this->db->select('category_id, name');
         $this->db->from('category');
+        $this->db->where('is_deleted', 0);
         $query = $this->db->get();
         return $query->result_array();
     }
-    public function get_category_name($category_id)
-    {
-        $this->db->where('category_id', $category_id);
-        $query = $this->db->get('category');
-        $row = $query->row();
-        return $row->name;
-    }
     public function insert($data)
     {
-        $this->db->insert('category', $data);
+        return $this->db->insert('category', $data);
     }
     public function update($update_data)
     {
         $this->db->where('category_id', $update_data['category_id']);
-        $this->db->update('category', $update_data);
+        return $this->db->update('category', $update_data);
     }
     public function delete($category_id)
     {
         $this->db->where('category_id', $category_id);
-        $this->db->delete('category');
+        return $this->db->update('category', array('is_deleted' => 1));
     }
 }

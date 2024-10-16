@@ -6,6 +6,7 @@
 <!-- Semantic UI JS -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>
 <script>
@@ -22,19 +23,6 @@
             }
         });
     });
-
-    function fetchStatistics() {
-        fetch('<?php echo site_url('dashboard/get_statistics'); ?>')
-            .then(response => response.json())
-            .then(data => {
-                // Update konten dari setiap elemen
-                document.getElementById('total-users').textContent = data.total_users;
-                document.getElementById('active-tickets').textContent = data.active_tickets;
-                document.getElementById('total-reports').textContent = data.total_reports;
-                document.getElementById('pending-issues').textContent = data.pending_issues;
-            })
-            .catch(error => console.error('Error fetching statistics:', error));
-    }
 
     function confirmLogout(event) {
         event.preventDefault(); // Prevent the default anchor action
@@ -70,12 +58,16 @@
         // Format waktu
         const time = now.toLocaleTimeString('id-ID'); // Menggunakan format waktu Indonesia
 
+        // Menampilkan tanggal dan waktu
         document.getElementById('date').textContent = date;
         document.getElementById('time').textContent = time;
     }
 
-    setInterval(updateDateTime, 1000); // Update every second
-    updateDateTime(); // Initialize immediately
+    // Panggil saat pertama kali halaman dimuat
+    updateDateTime();
+
+    // Update setiap detik
+    setInterval(updateDateTime, 1000);
 </script>
 </body>
 
