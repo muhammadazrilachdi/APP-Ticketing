@@ -256,27 +256,14 @@
                         <input type="checkbox" id="show-password">
                         <label for="show-password">Tampilkan Password</label>
                     </div>
-                    <a href="#" id="forgotPassword">Lupa password or info? </a>
+                    <a href="#" onclick="showForgotPasswordModal()">Lupa password or info?</a>
                 </div>
                 <button class="login-btn">Log in</button>
             </div>
         </form>
     </div>
 
-    <!-- Modal for Forgot Password -->
-    <div id="forgotPasswordModal" class="modal" style="display: none;">
-        <div class="modal-content" style="width: 300px; padding: 20px;"> <!-- Mengurangi lebar modal -->
-            <h2>Lupa Password ?</h2>
-            <p>Hubungi Admin Di Bawah Ini Jika Anda Lupa Password/Ingin Jadi Pengguna</p>
-            <a id="contactAdminBtn" href="https://wa.me/6281282150702" class="ui green basic button" target="_blank">
-                <i class="fab fa-whatsapp" style="font-size: 15px;"></i> Hubungi Admin
-            </a>
-            <button class=" ui red basic button" id="close-forgot-password">Tutup</button>
-
-        </div>
-    </div>
-
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         // Menampilkan atau menyembunyikan password
         document.getElementById('show-password').addEventListener('change', function() {
@@ -306,6 +293,24 @@
             if (event.target === modal) {
                 modal.style.display = "none"; // Menyembunyikan modal
             }
+        }
+
+        function showForgotPasswordModal() {
+            Swal.fire({
+                title: 'Lupa Password?',
+                text: 'Hubungi Admin Di Bawah Ini Jika Anda Lupa Password/Ingin Jadi Pengguna',
+                icon: 'info',
+                showCancelButton: true,
+                confirmButtonText: '<i class="fab fa-whatsapp" style="margin-right: 5px;"></i> Hubungi Admin',
+                cancelButtonText: 'Tutup',
+                customClass: {
+                    confirmButton: 'btn-whatsapp',
+                },
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.open('https://wa.me/6281282150702', '_blank');
+                }
+            });
         }
     </script>
 </body>

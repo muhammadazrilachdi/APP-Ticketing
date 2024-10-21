@@ -568,15 +568,6 @@
                 </div>
             </div>
 
-
-            <div class="logout-message" id="logout-message" style="display: none;">
-                <div class="modal-content">
-                    <h4>Apakah Anda yakin ingin logout?</h4>
-                    <button class="ui red basic button" id="confirm-logout">Ya</button>
-                    <button class="ui black basic button" id="cancel-logout">Tidak</button>
-                </div>
-            </div>
-
             <div class="separator"></div>
             <footer class="footer">
                 <a href="#myPage" title="To Top">
@@ -797,7 +788,7 @@
                     event.preventDefault(); // Mencegah aksi default tautan
                     Swal.fire({
                         title: 'Apakah Anda yakin ingin logout?',
-                        icon: 'warning',
+                        icon: 'question',
                         showCancelButton: true,
                         confirmButtonText: 'Ya',
                         cancelButtonText: 'Tidak'
