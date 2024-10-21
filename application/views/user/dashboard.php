@@ -413,29 +413,6 @@
         </div>
 
         <!-- Modal -->
-        <div id="alertModal" class="modal">
-            <div class="modal-content-custom" style="padding: 20px; width: 300px; height: 300px;">
-                <span class="close-button">&times;</span>
-                <?php if (!empty($message)): ?>
-                    <div class="ui negative message animated fadeIn">
-                        <p><?php echo $message; ?></p>
-                    </div>
-                <?php endif; ?>
-                <?php if ($this->session->flashdata('success')): ?>
-                    <div class="ui success message animated fadeIn">
-                        <i class="checkmark icon green"></i>
-                        <p><?php echo $this->session->flashdata('success'); ?></p>
-                        <p><a href="#services" id="statusLink">Klik Disini Untuk Lihat Status Dan No.Status</a></p>
-                    </div>
-                <?php endif; ?>
-                <?php if ($this->session->flashdata('error')): ?>
-                    <div class="ui negative message animated fadeIn">
-                        <i class="times icon red"></i>
-                        <p><?php echo $this->session->flashdata('error'); ?></p>
-                    </div>
-                <?php endif; ?>
-            </div>
-        </div>
     </div>
 
 
@@ -609,6 +586,8 @@
                 <p class="powered">Powered BY IT APP</p>
             </footer>
 
+
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
             <script>
                 let typingActive = false; // Menandakan apakah typing sedang aktif
 
@@ -786,6 +765,49 @@
                         }
                     });
                 });
+
+                document.addEventListener('DOMContentLoaded', function() {
+                    <?php if (!empty($message)): ?>
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: '<?php echo addslashes($message); ?>'
+                        });
+                    <?php endif; ?>
+
+                    <?php if ($this->session->flashdata('success')): ?>
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil!',
+                            text: '<?php echo addslashes($this->session->flashdata('success')); ?>',
+                            footer: '<a href="#services" id="statusLink">Klik Disini Untuk Lihat Status Dan No.Status</a>'
+                        });
+                    <?php endif; ?>
+
+                    <?php if ($this->session->flashdata('error')): ?>
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal!',
+                            text: '<?php echo addslashes($this->session->flashdata('error')); ?>'
+                        });
+                    <?php endif; ?>
+                });
+
+                function confirmLogout(event) {
+                    event.preventDefault(); // Mencegah aksi default tautan
+                    Swal.fire({
+                        title: 'Apakah Anda yakin ingin logout?',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Ya',
+                        cancelButtonText: 'Tidak'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Ganti dengan URL logout yang benar
+                            window.location.href = '<?php echo site_url('auth/logout'); ?>'; // Misalnya, '/logout'
+                        }
+                    });
+                }
             </script>
 </body>
 

@@ -288,25 +288,6 @@
                         <li></li>
                     </ul>
                 </div>
-
-                <!-- Alert Messages -->
-                <div class="alert-container">
-                    <div class="ui messages">
-                        <?php if ($this->session->flashdata('error')): ?>
-                            <div class="ui negative message">
-                                <div class="header">Error</div>
-                                <p><?= $this->session->flashdata('error'); ?></p>
-                            </div>
-                        <?php endif; ?>
-                        <?php if ($this->session->flashdata('success')): ?>
-                            <div class="ui positive message">
-                                <div class="header">Success</div>
-                                <p><?= $this->session->flashdata('success'); ?></p>
-                            </div>
-                        <?php endif; ?>
-                    </div>
-                </div>
-
                 <!-- Modal -->
                 <div id="passwordModal" class="modal fade" tabindex="-1" role="dialog">
                     <div class="modal-dialog" role="document">
@@ -361,12 +342,33 @@
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                <?php if ($this->session->flashdata('error')): ?>
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: '<?= addslashes($this->session->flashdata('error')); ?>'
+                    });
+                <?php endif; ?>
+
+                <?php if ($this->session->flashdata('success')): ?>
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: '<?= addslashes($this->session->flashdata('success')); ?>'
+                    });
+                <?php endif; ?>
+            });
+
+            // Menangani klik untuk modal
             $('#ubahPasswordLink').click(function(e) {
                 e.preventDefault();
                 $('#passwordModal').modal('show');
             });
 
+            // Menangani submit form
             $('#passwordForm').submit(function(e) {
                 const oldPassword = $('#oldPassword').val();
                 const newPassword = $('#newPassword').val();
@@ -374,14 +376,24 @@
 
                 if (oldPassword === '' || newPassword === '' || confirmPassword === '') {
                     e.preventDefault();
-                    alert("Semua field harus diisi.");
+                    Swal.fire('Error', 'Semua field harus diisi.', 'error');
                 } else if (newPassword !== confirmPassword) {
                     e.preventDefault();
-                    alert("Password baru dan konfirmasi tidak sama.");
+                    Swal.fire('Error', 'Password baru dan konfirmasi tidak sama.', 'error');
+                } else {
+                    // Tambahkan logika untuk menangani form di sini
+                    // Jika gagal, tampilkan alert
+                    <?php if ($this->session->flashdata('error')): ?>
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal',
+                            text: '<?= addslashes($this->session->flashdata('error')); ?>'
+                        });
+                    <?php endif; ?>
                 }
-
             });
 
+            // Toggle password visibility
             document.getElementById('showOldPassword').addEventListener('change', function() {
                 const oldPasswordInput = document.getElementById('oldPassword');
                 oldPasswordInput.type = this.checked ? 'text' : 'password';

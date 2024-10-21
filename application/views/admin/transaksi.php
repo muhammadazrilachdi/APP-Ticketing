@@ -133,7 +133,7 @@
                                 <td style="padding: 10px; white-space: nowrap;"><?php echo $row['status_name']; ?></td>
                                 <td style="padding: 10px; white-space: nowrap;"><?php echo $row['feedback']; ?></td>
                                 <td style="padding: 10px; display: flex; justify-content: center;">
-                                    <a href="<?php echo site_url('admin/transaksi/detail/' . $row['request_id']); ?>" class="ui button">
+                                    <a href="<?php echo site_url('admin/transaksi/detail/' . $row['no_ticket']); ?>" class="ui grey button">
                                         Detail
                                     </a>
                                     <button class="ui olive button edit-button" data-request-id="<?php echo $row['request_id']; ?>" data-request-topic="<?php echo $row['topic']; ?>" data-request-resource="<?php echo $row['resource']; ?>" style="margin-right: 5px;">

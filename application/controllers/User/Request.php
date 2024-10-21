@@ -46,7 +46,7 @@ class Request extends CI_Controller
             'user_id_request' => $user_id_request,
             'category_id' => $this->input->post('category_id'),
             'priority_id' => $this->input->post('priority_id'),
-            'status_id' => 1, // Assuming 1 is the initial status (e.g., 'Open' or 'Pending')
+            'status_id' => 1, // Status awal
             'topic' => $this->input->post('topic'),
             'description' => $this->input->post('description'),
             'resource' => 'Ticketing',
@@ -80,6 +80,104 @@ class Request extends CI_Controller
 
         redirect('user/dashboard');
     }
+
+    public function create_request_api()
+    {
+        // Cek jika request berasal dari API
+        if ($this->input->is_ajax_request() || $this->input->method() === 'post') {
+            // Mengambil data dari request API
+            $data = json_decode(file_get_contents('php://input'), true);
+
+            // Cek jika data adalah null
+            if (is_null($data)) {
+                $this->output->set_status_header(400);
+                echo json_encode(['error' => 'Invalid JSON input.']);
+                return;
+            }
+
+            // Validasi data
+            $this->form_validation->set_data($data);
+            $this->form_validation->set_rules('category_id', 'Category', 'required');
+            $this->form_validation->set_rules('priority_id', 'Priority', 'required');
+            $this->form_validation->set_rules('topic', 'Topic', 'required|max_length[100]');
+            $this->form_validation->set_rules('description', 'Description', 'required');
+
+            if ($this->form_validation->run() == FALSE) {
+                $this->output->set_status_header(400);
+                echo json_encode(['error' => validation_errors()]);
+                return;
+            }
+
+            // Mengambil email user dari data
+            $user_email = $data['user_email'];
+            $user_id_request = $this->Request_model->get_user_id_by_email($user_email);
+
+            // Menyusun nomor tiket
+            $category = $this->Category_model->get_category_by_id($data['category_id']);
+            $prefix = $category->prefix;
+            $year = date('Y');
+            $month = date('m');
+            $sequence_number = $this->Request_model->get_last_ticket_number($year);
+            $no_ticket = $prefix . '.' . $year . '.' . $month . '.' . str_pad($sequence_number, 5, '0', STR_PAD_LEFT);
+
+            // Mengambil sumber request dari header
+            $resource_source = $this->input->get_request_header('X-Source', TRUE);
+
+            // Debugging untuk memastikan header diterima
+            log_message('debug', 'X-Source header value: ' . ($resource_source ? $resource_source : 'Not received'));
+
+            // Menyusun data tiket
+            $ticket_data = [
+                'no_ticket' => $no_ticket,
+                'user_id_request' => $user_id_request,
+                'category_id' => $data['category_id'],
+                'priority_id' => $data['priority_id'],
+                'status_id' => 1, // Status awal
+                'topic' => $data['topic'],
+                'description' => $data['description'],
+                'resource' => $resource_source ? $resource_source : 'Default', // Default jika tidak ada
+                'created_at' => date('Y-m-d H:i:s'),
+                'created_by' => $user_email
+            ];
+
+            // Handle file lampiran dalam format base64
+            if (!empty($data['lampiran'])) {
+                $data_parts = explode(';', $data['lampiran']);
+                if (count($data_parts) < 2) {
+                    $this->output->set_status_header(400);
+                    echo json_encode(['error' => 'Invalid lampiran format.']);
+                    return;
+                }
+                $extension = explode('/', $data_parts[0])[1];
+                $base64_data = explode(',', $data_parts[1])[1];
+
+                // Mendapatkan nama file
+                $file_name = 'lampiran_' . time() . '.' . $extension;
+                $file_path = './uploads/' . $file_name;
+
+                // Menyimpan file
+                if (file_put_contents($file_path, base64_decode($base64_data)) === false) {
+                    $this->output->set_status_header(500);
+                    echo json_encode(['error' => 'Gagal menyimpan lampiran.']);
+                    return;
+                }
+                $ticket_data['lampiran'] = $file_name;
+            }
+
+            // Simpan data tiket
+            if ($this->Request_model->insert($ticket_data)) {
+                echo json_encode(['success' => 'Ticket berhasil dibuat dengan nomor: ' . $no_ticket]);
+            } else {
+                $this->output->set_status_header(500);
+                echo json_encode(['error' => 'Gagal membuat ticket. Silakan coba lagi.']);
+            }
+        } else {
+            $this->output->set_status_header(405);
+            echo json_encode(['error' => 'Method not allowed.']);
+        }
+    }
+
+
 
     public function view_requests()
     {
