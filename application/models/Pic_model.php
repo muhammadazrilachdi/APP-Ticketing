@@ -21,6 +21,9 @@ class Pic_model extends CI_Model
     }
     public function insert($data)
     {
+        $user = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+        $data['created_by'] = $user['user_id'];
+        $data['created_at'] = date('Y-m-d H:i:s');
         return $this->db->insert('category_pic', $data);
     }
     public function update($category_pic_id, $update_data)

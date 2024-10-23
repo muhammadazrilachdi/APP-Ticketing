@@ -22,6 +22,7 @@
             <?php endif; ?>
         </div>
     </div>
+
     <table class="display" style="margin-top: 20px;" id="table-users">
         <thead>
             <tr>
@@ -38,8 +39,14 @@
                     <td><?= htmlspecialchars($u['no_hp']); ?></td>
                     <td><?= htmlspecialchars($u['email']); ?></td>
                     <td>
-                        <button class="ui olive button edit-button" data-user-id="<?= $u['nik']; ?>" data-user-name="<?= htmlspecialchars($u['name']); ?>" data-user-nohp="<?= htmlspecialchars($u['no_hp']); ?>" data-user-email="<?= htmlspecialchars($u['email']); ?>">Edit</button>
-                        <button class="ui button negative delete-button" data-user-id="<?= $u['nik']; ?>">Hapus</button>
+                        <button class="ui olive button edit-button"
+                            data-user-id="<?php echo $u['user_id']; ?>"
+                            data-nik="<?php echo $u['nik']; ?>"
+                            data-name="<?php echo $u['name']; ?>"
+                            data-no_hp="<?php echo $u['no_hp']; ?>"
+                            data-email="<?php echo $u['email']; ?>"
+                            data-departement-id="<?php echo $u['departement_id']; ?>">Edit</button>
+                        <button class="ui button negative delete-button" data-user-id="<?= $u['user_id']; ?>">Hapus</button>
                     </td>
                 </tr>
             <?php endforeach; ?>
@@ -63,7 +70,7 @@
             </div>
             <div class="field">
                 <label>No Handphone</label>
-                <input type="tel" name="no_hp" placeholder="Masukkan No Handphone" required>
+                <input type="number" name="no_hp" placeholder="Masukkan No Handphone" required>
             </div>
             <div class="field">
                 <label>Email</label>
@@ -90,38 +97,46 @@
     </div>
 </div>
 
-<!-- Modal Edit Pengguna -->
-<div class="ui modal" id="editUserModal">
+<div id="editModal" class="ui modal">
     <i class="close icon"></i>
     <div class="header">Edit Pengguna</div>
     <div class="content">
-        <form class="ui form" method="post" action="<?php echo site_url('admin/user/process_edit'); ?>">
-            <input type="hidden" name="nik" id="edit-nik">
+        <form class="ui form" id="editForm" method="post" action="<?= site_url('admin/user/process_edit') ?>">
+            <input type="hidden" name="user_id" id="user_id">
+
+            <div class="field">
+                <label>NIK</label>
+                <input type="number" name="nik" id="nik" placeholder="Masukkan NIK" required>
+            </div>
             <div class="field">
                 <label>Nama</label>
-                <input type="text" name="name" id="edit-name" placeholder="Masukkan Nama" required>
+                <input type="text" name="name" id="name" placeholder="Masukkan Nama" required>
             </div>
             <div class="field">
                 <label>No Handphone</label>
-                <input type="tel" name="no_hp" id="edit-no_hp" placeholder="Masukkan No Handphone" required>
+                <input type="number" name="no_hp" id="no_hp" placeholder="Masukkan No Handphone" required>
             </div>
             <div class="field">
                 <label>Email</label>
-                <input type="email" name="email" id="edit-email" placeholder="Masukkan Email" required>
+                <input type="email" name="email" id="email" placeholder="Masukkan Email" required>
+            </div>
+            <div class="field">
+                <label>Password</label>
+                <input type="password" name="password" id="password" placeholder="Masukkan Password (biarkan kosong jika tidak diubah)">
             </div>
             <div class="field">
                 <label>Departemen</label>
-                <select name="departement_id" class="select2" style="width: 100%;" required>
+                <select name="departement_id" id="departement_id" class="select2" style="width: 100%;" required>
                     <option value="">Pilih Departemen</option>
                     <?php foreach ($departement_id as $dep) : ?>
                         <option value="<?php echo $dep['departement_id']; ?>"><?php echo $dep['name']; ?></option>
                     <?php endforeach; ?>
                 </select>
             </div>
-            <div class="actions">
-                <button type="button" class="ui button" onclick="$('#editUserModal').modal('hide');">Batal</button>
-                <button type="submit" class="ui button positive">Simpan Perubahan</button>
-            </div>
         </form>
+    </div>
+    <div class="actions">
+        <button type="button" class="ui button" onclick="closeModal()">Batal</button>
+        <button type="submit" class="ui button positive" form="editForm">Perbarui Pengguna</button>
     </div>
 </div>

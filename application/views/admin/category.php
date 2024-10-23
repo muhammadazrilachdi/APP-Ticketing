@@ -39,7 +39,7 @@
                         <a class="ui button CustomYellow detail-button"
                             data-category-id="<?php echo $c['category_id']; ?>"
                             href="<?php echo site_url('admin/category/pic/' . $c['category_id']); ?>"
-                            style="background-color: black; color: white; border: none; padding: 10px 15px; text-decoration: none; border-radius: 5px;">
+                            style="background-color: blue; color: white; border: none; padding: 10px 15px; text-decoration: none; border-radius: 5px;">
                             PIC
                         </a>
                         <button class="ui olive button CustomGreen edit-button" data-category-id="<?php echo $c['category_id']; ?>" data-category-name="<?php echo htmlspecialchars($c['name']); ?>" data-category-prefix="<?php echo htmlspecialchars($c['prefix']); ?>">Edit</button>
@@ -57,12 +57,12 @@
     <div class="content">
         <form class="ui form" method="post" action="<?php echo site_url('admin/category/process_tambah'); ?>">
             <div class="field">
-                <label>Prefix Category</label>
-                <input type="text" name="prefix" maxlength="3" placeholder="Masukkan Prefix Category" required>
-            </div>
-            <div class="field">
                 <label>Nama Category</label>
                 <input type="text" name="name" placeholder="Masukkan Nama Category" required>
+            </div>
+            <div class="field">
+                <label>Prefix Category</label>
+                <input type="text" name="prefix" maxlength="3" placeholder="Masukkan Prefix Category" required>
             </div>
             <div class="actions">
                 <button type="button" class="ui button" onclick="$('#createTicketModal').modal('hide');">Batal</button>

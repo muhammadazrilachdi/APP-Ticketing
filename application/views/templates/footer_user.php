@@ -1,8 +1,4 @@
 <!-- Semantic UI JS -->
-<footer>
-    <p>&copy; 2024 Management System Asset. All rights reserved.</p>
-    <p1 class="powered-by">Powered by IT APP</p1>
-</footer>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -25,50 +21,39 @@
     });
 
     $(document).ready(function() {
-        $('.edit-button').on('click', function() {
-            const userId = $(this).data('user-id');
-            const userName = $(this).data('user-name');
-            const userNoHp = $(this).data('user-nohp');
-            const userEmail = $(this).data('user-email');
+        // Initialize modal
+        $('.ui.modal').modal();
 
-            $('#edit-nik').val(userId);
-            $('#edit-name').val(userName);
-            $('#edit-no_hp').val(userNoHp);
-            $('#edit-email').val(userEmail);
+        // Handle Edit User
+        $(document).on('click', '.edit-button', function() {
+            var userId = $(this).data('user-id');
+            var nik = $(this).data('nik');
+            var name = $(this).data('name');
+            var noHp = $(this).data('no_hp');
+            var email = $(this).data('email');
+            var departementId = $(this).data('departement-id');
 
-            $('#editUserModal').modal('show');
+            $('#user_id').val(userId);
+            $('#nik').val(nik);
+            $('#name').val(name);
+            $('#no_hp').val(noHp);
+            $('#email').val(email);
+            $('#departement_id').val(departementId).trigger('change');
+
+            $('#editModal').modal('show');
         });
 
-        $('#editUserForm').on('submit', function(e) {
-            e.preventDefault();
-
-            $.ajax({
-                url: '<?php echo site_url('admin/user/process_edit'); ?>',
-                type: 'POST',
-                data: $(this).serialize(),
-                success: function(response) {
-                    alert('Pengguna berhasil diperbarui.');
-                    location.reload();
-                },
-                error: function(xhr) {
-                    alert('Terjadi kesalahan saat mengedit pengguna.');
-                }
-            });
-        });
-
-        $(document).ready(function() {
-            $(document).on('click', '.delete-button', function() {
-                var userId = $(this).data('user-id');
-                if (confirm('Apakah Anda yakin ingin menghapus user ini?')) {
-                    window.location.href = '<?php echo site_url('admin/user/delete/'); ?>' + userId;
-                }
-            });
-
-            $(document).on('click', '.edit-button', function() {
-                var userId = $(this).data('user-id');
-            });
+        $(document).on('click', '.delete-button', function() {
+            var userId = $(this).data('user-id');
+            if (confirm('Apakah Anda yakin ingin menghapus pengguna ini?')) {
+                window.location.href = '<?php echo site_url('admin/user/delete/'); ?>' + userId;
+            }
         });
     });
+
+    function closeModal() {
+        $('#editModal').modal('hide');
+    }
 
     document.addEventListener('DOMContentLoaded', function() {
         const masterMenu = document.getElementById('master-menu');

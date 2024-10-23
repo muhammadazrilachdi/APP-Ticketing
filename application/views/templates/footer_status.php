@@ -1,9 +1,3 @@
-<footer>
-    <p>&copy; 2024 Management System Asset. All rights reserved.</p>
-    <p1 class="powered-by">Powered by IT APP</p1>
-</footer>
-
-
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>

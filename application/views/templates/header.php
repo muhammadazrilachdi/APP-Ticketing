@@ -7,10 +7,8 @@
     <title><?php echo htmlspecialchars($title); ?></title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
     <link rel="shortcut icon" href="<?= base_url('asset/images/persada.png'); ?>" type="image/png" />
     <style>
         html,
@@ -18,7 +16,44 @@
             height: 100%;
             margin: 0;
             padding: 0;
-            background-color: rgb(240, 240, 240);
+        }
+
+        .wrapper {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            /* Membuat wrapper memenuhi tinggi layar */
+        }
+
+        .container {
+            margin-top: 60px;
+            /* Sesuaikan dengan tinggi top bar */
+        }
+
+        .content-container {
+            margin-left: 150px;
+            /* Sesuaikan dengan lebar sidebar */
+            width: calc(100% - 222px);
+            /* Kurangi lebar sidebar */
+            padding: 20px;
+        }
+
+        /* Memastikan tooltip muncul di atas content */
+        .ui.popup {
+            z-index: 9999 !important;
+            background-color: #333 !important;
+            color: #fff !important;
+            border: 1px solid #444 !important;
+        }
+
+        /* Arrow tooltip */
+        .ui.popup:before {
+            background-color: #333 !important;
+            border-color: #444 !important;
+        }
+
+        .sidebar {
+            z-index: 1000;
         }
 
         .select2 {
@@ -27,7 +62,7 @@
         }
 
         .top-bar {
-            background: #36454F;
+            background: #333;
             color: #fff;
             padding: 10px 20px;
             display: flex;
@@ -64,7 +99,7 @@
         .separator {
             width: 1px;
             height: 40px;
-            background: #424A4D;
+            background: #444;
         }
 
         .top-bar .sidebar-text {
@@ -77,6 +112,15 @@
             font-weight: bold;
         }
 
+        .nav-link:hover span,
+        .sub-menu a:hover span {
+            display: block !important;
+        }
+
+        .sub-menu a.active {
+            background-color: #444;
+        }
+
         .top-bar .sidebar-text::after {
             content: '';
             position: absolute;
@@ -85,81 +129,21 @@
             transform: translateY(-50%);
             width: 1px;
             height: 40px;
-            background-color: #424A4D;
+            background-color: #444;
         }
 
-        .sidebar {
-            background: #2F4F4F;
-            color: #fff;
-            width: 222px;
-            height: 100%;
-            position: fixed;
-            top: 40px;
-            left: 0;
-            padding: 20px 0;
-            box-sizing: border-box;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            z-index: 1000;
-            background: linear-gradient(to bottom right, #36454F, #36454F);
+        .nav-link:hover span,
+        .sub-menu a:hover span {
+            display: block !important;
+            z-index: 2000 !important;
+
         }
 
-        .sidebar .sidebar-text {
-            margin: 50px;
-            font-size: 1em;
-            color: #fff;
-            text-align: center;
-        }
+        .nav-link:hover .tooltip {
+            display: block;
+            /* Tampilkan tooltip saat dihover */
+            z-index: 2000 !important;
 
-        .sidebar .logo-separator {
-            width: 222px;
-            height: 1px;
-            background: #424A4D;
-            margin-right: 5px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-        }
-
-        .sidebar .nav-link {
-            color: #fff;
-            margin: 10px 0;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            width: 100%;
-            margin-left: 15px;
-            margin-top: 15px;
-        }
-
-        .sidebar .nav-link i {
-            margin-right: 10px;
-        }
-
-        .sidebar .nav-link:hover {
-            text-decoration: underline;
-        }
-
-        /* Tambahkan kelas .sidebar-toggle pada tombol toggle */
-        .sidebar-toggle {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 50px;
-            height: 100%;
-            background: #333;
-            color: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: transform 0.3s ease;
-        }
-
-        .sidebar-toggle i {
-            font-size: 24px;
-        }
-
-        .sidebar-hide {
-            transform: translateX(-100%);
         }
 
         .sidebar-show {
@@ -170,20 +154,27 @@
             list-style: none;
             padding-left: 30px;
             display: none;
+            z-index: 2000 !important;
         }
 
         .sub-menu li {
             margin: 10px 0;
             margin-left: 5px;
+            z-index: 2000 !important;
+
         }
 
         .sub-menu a {
             color: #fff;
             text-decoration: none;
+            z-index: 2000 !important;
+
         }
 
         .sub-menu a:hover {
             text-decoration: underline;
+            z-index: 2000 !important;
+
         }
 
         .submenu-arrow {
@@ -203,11 +194,13 @@
         }
 
         .main-content {
-            margin-left: 220px;
+            margin-left: 50px;
             margin-top: 40px;
             padding: 20px;
             height: calc(100vh - 40px);
             box-sizing: border-box;
+            z-index: 1 !important;
+
         }
 
         .welcome-message {
@@ -233,6 +226,8 @@
             /* Mengatur elemen agar tersebar dengan jarak yang sama */
             align-items: center;
             /* Menyusun elemen secara vertikal di tengah */
+            z-index: 1 !important;
+
         }
 
         .ui.right.aligned.category.search {
@@ -354,30 +349,6 @@
                 opacity: 1;
                 transform: scale(1);
             }
-        }
-
-
-        footer {
-            color: #6C757D;
-            text-align: center;
-            padding: 10px;
-            position: fixed;
-            bottom: 0;
-            width: calc(100% - 220px);
-            left: 220px;
-            border-top: 1px dotted #9EB0B3;
-            background: #fff;
-        }
-
-        footer .footer-text {
-            margin: 0;
-            font-weight: bold;
-        }
-
-        footer .powered-by {
-            color: #007BFF;
-            font-weight: bold;
-            display: inline;
         }
 
         .alert-container {

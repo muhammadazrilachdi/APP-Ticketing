@@ -42,7 +42,6 @@ class Category extends CI_Controller
             $data = [
                 'name' => $this->input->post('name'),
                 'prefix' => $this->input->post('prefix'),
-                'created_at' => date('Y-m-d H:i:s')
             ];
             if ($this->Category_model->insert($data)) {
                 $this->session->set_flashdata('success', 'Data berhasil ditambahkan');

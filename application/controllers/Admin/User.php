@@ -50,7 +50,7 @@ class User extends CI_Controller
                 'email' => $this->input->post('email'),
                 'password' => $hashed_password,
                 'departement_id' => $this->input->post('departement_id'),
-                'created_at' => date('Y-m-d H:i:s')
+                'created_by' => $this->input->post('user_id'),
             ];
             if ($this->M_user_model->insert($data)) {
                 $this->session->set_flashdata('success', 'Data berhasil ditambahkan');
@@ -62,35 +62,43 @@ class User extends CI_Controller
     }
     public function process_edit()
     {
+
+        $this->form_validation->set_rules('user_id', 'User ID', 'required|numeric');
+        $this->form_validation->set_rules('nik', 'NIK', 'required|numeric');
         $this->form_validation->set_rules('name', 'Nama', 'required');
         $this->form_validation->set_rules('no_hp', 'No Handphone', 'required|numeric');
         $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
-        $this->form_validation->set_rules('departement_id', 'Departement ID', 'required');
 
         if ($this->form_validation->run() == FALSE) {
-            $this->session->set_flashdata('errors', validation_errors());
+            $this->session->set_flashdata('error', validation_errors());
             redirect('admin/user');
         } else {
+            $user_id = $this->input->post('user_id');
             $data = [
+                'nik' => $this->input->post('nik'),
                 'name' => $this->input->post('name'),
                 'no_hp' => $this->input->post('no_hp'),
                 'email' => $this->input->post('email'),
                 'departement_id' => $this->input->post('departement_id'),
-                'created_at' => date('Y-m-d H:i:s')
             ];
-            $nik = $this->input->post('nik');
-            if ($this->M_user_model->update($nik, $data)) {
+
+            $password = $this->input->post('password');
+            if (!empty($password)) {
+                $data['password'] = md5($password);
+            }
+
+            if ($this->M_user_model->update($user_id, $data)) {
                 $this->session->set_flashdata('success', 'Data berhasil diupdate');
-                redirect('admin/user');
             } else {
                 $this->session->set_flashdata('error', 'Gagal mengupdate data');
-                redirect('admin/user');
             }
+            redirect('admin/user');
         }
     }
-    public function delete($nik)
+
+    public function delete($user_id)
     {
-        $this->M_user_model->delete($nik);
+        $this->M_user_model->delete($user_id);
         $this->session->set_flashdata('success', 'User berhasil dihapus');
         redirect('admin/user');
     }

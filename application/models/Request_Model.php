@@ -19,7 +19,8 @@ class Request_model extends CI_Model
                              ON `request`.`priority_id` = `priority`.`priority_id`
                       LEFT JOIN `user` 
                              ON `request`.`user_id_request` = `user`.`user_id`
-                       ORDER BY `request`.`request_id` ASC
+                          WHERE `request`.`is_deleted` = 0
+                       ORDER BY `request`.`request_id` ASC 
                        ";
         $request = $this->db->query($queryRequest)->result_array();
         return $request;
@@ -66,7 +67,7 @@ class Request_model extends CI_Model
         $this->db->from('request');
         $this->db->where('YEAR(created_at)', $year);
 
-        $this->db->order_by('no_ticket', 'DESC');
+        $this->db->order_by('SUBSTR(no_ticket, -5, 5) DESC');
         $query = $this->db->get();
         if ($query->num_rows() > 0) {
             $last_ticket = $query->row()->no_ticket;
@@ -84,18 +85,12 @@ class Request_model extends CI_Model
     }
     public function insert($data)
     {
-        $this->db->insert('request', $data);
-        return $this->db->insert_id();
+        $user = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+        $data['created_by'] = $user['user_id'];
+        $data['created_at'] = date('Y-m-d H:i:s');
+        return $this->db->insert('request', $data);
     }
-    public function insert_request($data)
-    {
-        if (!isset($data['lampiran'])) {
-            $data['lampiran'] = null;
-        }
 
-        $this->db->insert('request', $data);
-        return $this->db->insert_id();
-    }
     public function update($request_id, $update_data)
     {
         $this->db->where('request_id', $request_id);
@@ -105,7 +100,7 @@ class Request_model extends CI_Model
     public function delete($request_id)
     {
         $this->db->where('request_id', $request_id);
-        return $this->db->delete('request');
+        return $this->db->update('request', array('is_deleted' => 1));
     }
     public function get_request_by_id($request_id)
     {

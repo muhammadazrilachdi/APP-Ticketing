@@ -1,48 +1,42 @@
-<footer>
-    <p>&copy; 2024 Management System Asset. All rights reserved.</p>
-    <p1 class="powered-by">Powered by IT APP</p1>
-</footer>
-
 <!-- Semantic UI JS -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const masterMenu = document.getElementById('master-menu');
-        const masterSubmenu = document.getElementById('master-submenu');
-
-        // Toggle submenu visibility when the Master menu is clicked
-        masterMenu.addEventListener('click', function() {
-            if (masterSubmenu.style.display === "none" || masterSubmenu.style.display === "") {
-                masterSubmenu.style.display = "block"; // Show the submenu
-            } else {
-                masterSubmenu.style.display = "none"; // Hide the submenu
-            }
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl, {
+                placement: 'right' // Mengatur posisi tooltip di sebelah kanan
+            });
         });
     });
 
+    let isSubmenuVisible = false;
+
+    // Menangani klik pada Master untuk toggle submenu
+    document.getElementById('master-menu').addEventListener('click', function(event) {
+        event.stopPropagation(); // Mencegah event bubbling
+        isSubmenuVisible = !isSubmenuVisible; // Ubah status
+        document.getElementById('master-submenu').style.display = isSubmenuVisible ? 'block' : 'none';
+    });
+
+    // Fungsi untuk konfirmasi logout
     function confirmLogout(event) {
-        event.preventDefault(); // Prevent the default anchor action
-        $('#logout-message').fadeIn(); // Show the logout confirmation
+        event.preventDefault(); // Mencegah aksi default
+        $('#logout-message').fadeIn(); // Tampilkan konfirmasi logout
     }
+
     // Panggil fungsi fetchStatistics saat halaman dimuat
     window.onload = function() {
-        fetchStatistics();
+        fetchStatistics(); // Ambil statistik pertama kali
+        setInterval(fetchStatistics, 5000); // Pembaruan setiap 5 detik
     };
 
-    // Jika ingin diperbarui secara berkala, gunakan setInterval
-    setInterval(fetchStatistics, 5000); // Update setiap 5 detik
-
-    // Perbarui statistik setiap 5 detik
-    setInterval(fetchStatistics, 5000);
-
-    // Panggil saat pertama kali halaman dimuat
-    fetchStatistics();
-
-
+    // Fungsi untuk memperbarui tanggal dan waktu
     function updateDateTime() {
         const now = new Date();
 
@@ -53,10 +47,10 @@
             month: 'long',
             day: 'numeric'
         };
-        const date = now.toLocaleDateString('id-ID', options); // Menggunakan format tanggal Indonesia
+        const date = now.toLocaleDateString('id-ID', options); // Format tanggal Indonesia
 
         // Format waktu
-        const time = now.toLocaleTimeString('id-ID'); // Menggunakan format waktu Indonesia
+        const time = now.toLocaleTimeString('id-ID'); // Format waktu Indonesia
 
         // Menampilkan tanggal dan waktu
         document.getElementById('date').textContent = date;
@@ -65,7 +59,6 @@
 
     // Panggil saat pertama kali halaman dimuat
     updateDateTime();
-
     // Update setiap detik
     setInterval(updateDateTime, 1000);
 </script>

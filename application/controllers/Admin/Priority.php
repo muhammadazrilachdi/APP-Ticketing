@@ -37,7 +37,6 @@ class Priority extends CI_Controller
         } else {
             $data = [
                 'name' => $this->input->post('name'),
-                'created_at' => date('Y-m-d H:i:s'),
             ];
             if ($this->Priority_model->insert($data)) {
                 $this->session->set_flashdata('success', 'Data berhasil ditambahkan');

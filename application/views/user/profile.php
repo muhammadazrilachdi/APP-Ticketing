@@ -22,12 +22,30 @@
             margin: 0;
         }
 
+        /* Style untuk container */
         .container-fluid {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             display: flex;
             justify-content: center;
             max-width: 1200px;
-            /* adjust this value to your desired maximum width */
+            z-index: 1;
         }
+
+        /* Style untuk SweetAlert */
+        .swal2-container {
+            position: fixed !important;
+            z-index: 9999 !important;
+        }
+
+        .swal2-popup {
+            position: relative !important;
+        }
+
+        /* Hapus style modal yang tadi saya sarankan */
+        /* Biarkan modal menggunakan style default Bootstrap */
 
         .our-team {
             padding: 30px 0 40px;
@@ -251,6 +269,26 @@
             /* Tengah teks di dalam alert */
             width: 350px;
         }
+
+        body.modal-open {
+            overflow: hidden;
+            /* Mencegah scrolling */
+            position: fixed;
+            /* Mencegah body bergerak */
+            width: 100%;
+            /* Pastikan body tetap lebar penuh */
+        }
+
+        .modal {
+            position: fixed;
+            /* Pastikan modal tetap di tempat */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1050;
+            /* Pastikan modal di atas elemen lain */
+        }
     </style>
 </head>
 
@@ -270,7 +308,7 @@
         </div>
     </nav>
 
-    <div class="container-fluid">
+    <div class="profile-container">
         <div class="row">
             <div class="col-12 col-sm-6 col-md-4 col-lg-3">
                 <div class="our-team">
@@ -289,53 +327,54 @@
                     </ul>
                 </div>
                 <!-- Modal -->
-                <div id="passwordModal" class="modal fade" tabindex="-1" role="dialog">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-body">
-                                <!-- Pesan Feedback -->
-                                <?php if ($this->session->flashdata('error')): ?>
-                                    <div class="alert alert-danger">
-                                        <?= $this->session->flashdata('error'); ?>
-                                    </div>
-                                <?php endif; ?>
-                                <?php if ($this->session->flashdata('success')): ?>
-                                    <div class="alert alert-success">
-                                        <?= $this->session->flashdata('success'); ?>
-                                    </div>
-                                <?php endif; ?>
+            </div>
+        </div>
+    </div>
 
-                                <form id="passwordForm" method="post" action="<?php echo site_url('user/dashboard/change_password'); ?>">
-                                    <div class="form-group">
-                                        <label for="oldPassword">Password Lama</label>
-                                        <input type="password" class="form-control" name="oldPassword" id="oldPassword" placeholder="Password Lama" required>
-                                        <div class="ui checkbox">
-                                            <input type="checkbox" id="showOldPassword">
-                                            <label for="showOldPassword">Tampilkan Password</label>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="newPassword">Password Baru</label>
-                                        <input type="password" class="form-control" name="newPassword" id="newPassword" placeholder="Password Baru" required>
-                                        <div class="ui checkbox">
-                                            <input type="checkbox" id="showNewPassword">
-                                            <label for="showNewPassword">Tampilkan Password</label>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="confirmPassword">Konfirmasi Password</label>
-                                        <input type="password" class="form-control" name="confirmPassword" id="confirmPassword" placeholder="Konfirmasi Password" required>
-                                        <div class="ui checkbox">
-                                            <input type="checkbox" id="showConfirmPassword">
-                                            <label for="showConfirmPassword">Tampilkan Password</label>
-                                        </div>
-                                    </div>
-                                    <button type="submit" class="btn btn-red">Ubah Password</button>
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
-                                </form>
+    <div id="passwordModal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <!-- Pesan Feedback -->
+                    <?php if ($this->session->flashdata('error')): ?>
+                        <div class="alert alert-danger">
+                            <?= $this->session->flashdata('error'); ?>
+                        </div>
+                    <?php endif; ?>
+                    <?php if ($this->session->flashdata('success')): ?>
+                        <div class="alert alert-success">
+                            <?= $this->session->flashdata('success'); ?>
+                        </div>
+                    <?php endif; ?>
+
+                    <form id="passwordForm" method="post" action="<?php echo site_url('user/dashboard/change_password'); ?>">
+                        <div class="form-group">
+                            <label for="oldPassword">Password Lama</label>
+                            <input type="password" class="form-control" name="oldPassword" id="oldPassword" placeholder="Password Lama" required>
+                            <div class="ui checkbox">
+                                <input type="checkbox" id="showOldPassword">
+                                <label for="showOldPassword">Tampilkan Password</label>
                             </div>
                         </div>
-                    </div>
+                        <div class="form-group">
+                            <label for="newPassword">Password Baru</label>
+                            <input type="password" class="form-control" name="newPassword" id="newPassword" placeholder="Password Baru" required>
+                            <div class="ui checkbox">
+                                <input type="checkbox" id="showNewPassword">
+                                <label for="showNewPassword">Tampilkan Password</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="confirmPassword">Konfirmasi Password</label>
+                            <input type="password" class="form-control" name="confirmPassword" id="confirmPassword" placeholder="Konfirmasi Password" required>
+                            <div class="ui checkbox">
+                                <input type="checkbox" id="showConfirmPassword">
+                                <label for="showConfirmPassword">Tampilkan Password</label>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-red">Ubah Password</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -349,7 +388,12 @@
                     Swal.fire({
                         icon: 'error',
                         title: 'Error',
-                        text: '<?= addslashes($this->session->flashdata('error')); ?>'
+                        text: '<?= addslashes($this->session->flashdata('error')); ?>',
+                        allowOutsideClick: false,
+                        scrollbarPadding: false,
+                        heightAuto: false,
+                        position: 'center',
+                        backdrop: true
                     });
                 <?php endif; ?>
 
@@ -357,11 +401,23 @@
                     Swal.fire({
                         icon: 'success',
                         title: 'Success',
-                        text: '<?= addslashes($this->session->flashdata('success')); ?>'
+                        text: '<?= addslashes($this->session->flashdata('success')); ?>',
+                        allowOutsideClick: false,
+                        scrollbarPadding: false,
+                        heightAuto: false,
+                        position: 'center',
+                        backdrop: true
                     });
                 <?php endif; ?>
             });
 
+            $('#passwordModal').on('show.bs.modal', function() {
+                $('body').addClass('modal-open'); // Menambahkan kelas untuk mencegah scrolling
+            });
+
+            $('#passwordModal').on('hidden.bs.modal', function() {
+                $('body').removeClass('modal-open'); // Menghapus kelas saat modal ditutup
+            });
             // Menangani klik untuk modal
             $('#ubahPasswordLink').click(function(e) {
                 e.preventDefault();

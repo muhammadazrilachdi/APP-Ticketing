@@ -67,7 +67,7 @@ class Request extends CI_Controller
                 $upload_data = $this->upload->data();
                 $data['lampiran'] = $upload_data['file_name'];
             } else {
-                $this->session->set_flashdata('error', $this->upload->display_errors());
+                $this->session->set_flashdata('error', 'Upload File Gagal. Perhatikan Tipe File Dan Ukuran File');
                 redirect('user/dashboard');
             }
         }
@@ -108,9 +108,8 @@ class Request extends CI_Controller
                 return;
             }
 
-            // Mengambil email user dari data
-            $user_email = $data['user_email'];
-            $user_id_request = $this->Request_model->get_user_id_by_email($user_email);
+            // Mengambil user_id_request berdasarkan input lain, misalnya user_id
+            $user_id_request = $data['user_id']; // Pastikan user_id ada di input
 
             // Menyusun nomor tiket
             $category = $this->Category_model->get_category_by_id($data['category_id']);
@@ -137,7 +136,7 @@ class Request extends CI_Controller
                 'description' => $data['description'],
                 'resource' => $resource_source ? $resource_source : 'Default', // Default jika tidak ada
                 'created_at' => date('Y-m-d H:i:s'),
-                'created_by' => $user_email
+                // 'created_by' => $user_email // Dihapus
             ];
 
             // Handle file lampiran dalam format base64
@@ -176,8 +175,6 @@ class Request extends CI_Controller
             echo json_encode(['error' => 'Method not allowed.']);
         }
     }
-
-
 
     public function view_requests()
     {

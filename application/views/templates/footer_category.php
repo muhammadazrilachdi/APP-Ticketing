@@ -1,8 +1,3 @@
-<footer>
-    <p>&copy; 2024 Management System Asset. All rights reserved.</p>
-    <p1 class="powered-by">Powered by IT APP</p1>
-</footer>
-
 <!-- Semantic UI JS -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -18,16 +13,12 @@
     });
 
     $(document).ready(function() {
-        // Inisialisasi modal
         $('.ui.modal').modal();
 
-        // Event untuk membuka modal create
         $('#openCreateModal').on('click', function() {
             $('#createTicketModal').modal('show');
         });
 
-        // Event untuk tombol edit
-        // Event untuk tombol edit
         $(document).on('click', '.edit-button', function() {
             var categoryId = $(this).data('category-id');
             var categoryName = $(this).data('category-name');
@@ -39,7 +30,6 @@
             $('#editTicketModal_' + categoryId).modal('show');
         });
 
-        // Event untuk tombol delete
         $(document).on('click', '.delete-button', function() {
             var categoryId = $(this).data('category-id');
             if (confirm('Apakah Anda yakin ingin menghapus Category ini?')) {

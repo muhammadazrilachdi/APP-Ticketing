@@ -1,15 +1,19 @@
-<footer>
-    <p>&copy; 2024 Management System Asset. All rights reserved.</p>
-    <p1 class="powered-by">Powered by IT APP</p1>
-</footer>
-
 <!-- Semantic UI JS -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>
+
 <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl, {
+                placement: 'right' // Mengatur posisi tooltip di sebelah kanan
+            });
+        });
+    });
     document.getElementById('transactionForm').addEventListener('submit', function(event) {
         const fields = this.querySelectorAll('input[required], select[required], textarea[required]');
         let isValid = true;

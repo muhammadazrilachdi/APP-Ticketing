@@ -32,6 +32,22 @@ class Transaksi extends CI_Controller
         $data['request'] = $this->M_user_model->get_user_request();
         $data['request'] = $this->Request_model->get_all_request();
 
+        $data['bulan_indonesia'] = [
+            1 => 'Januari',
+            'Februari',
+            'Maret',
+            'April',
+            'Mei',
+            'Juni',
+            'Juli',
+            'Agustus',
+            'September',
+            'Oktober',
+            'November',
+            'Desember'
+        ];
+        $this->load->helper('tanggal');
+
         $this->load->view('templates/header', $data);
         $this->load->view('templates/sidebar', $data);
         $this->load->view('templates/topbar', $data);
@@ -52,9 +68,6 @@ class Transaksi extends CI_Controller
             redirect('admin/transaksi');
         }
 
-        $user_email = $this->session->userdata('email');
-        $user_id_request = $this->Request_model->get_user_id_by_email($user_email);
-
         $category = $this->Category_model->get_category_by_id($this->input->post('category_id'));
         $prefix = $category->prefix;
         $year = date('Y');
@@ -64,16 +77,15 @@ class Transaksi extends CI_Controller
 
         $data = [
             'no_ticket' => $no_ticket,
-            'user_id_request' => $user_id_request,
+            'user_id_request' => $this->input->post('user_id_request'),
             'category_id' => $this->input->post('category_id'),
             'priority_id' => $this->input->post('priority_id'),
             'topic' => $this->input->post('topic'),
             'description' => $this->input->post('description'),
             'status_id' => '1',
             'feedback' => $this->input->post('feedback'),
-            'resource' => 'Ticketing',
-            'created_at' => date('Y-m-d H:i:s'),
-            'created_by' => $user_email
+            'resource' => 'Ticketing'
+
         ];
 
 
@@ -171,7 +183,7 @@ class Transaksi extends CI_Controller
         $data['title'] = 'Detail Transaksi';
         $data['ticket'] = $this->Detail_Model->Detail_Ticket($no_ticket);
 
-        $this->load->view('templates/header_detail', $data);
+        $this->load->view('templates/header', $data);
         $this->load->view('templates/sidebar_detail', $data);
         $this->load->view('templates/topbar', $data);
         $this->load->view('admin/transaksi_detail', $data);

@@ -44,9 +44,9 @@
                     <td><?= htmlspecialchars($row['email']); ?></td>
                     <td>
                         <?php if ($row['is_active'] == 1) : ?>
-                            <span style="color: green; font-weight: bold;">Aktif</span> <!-- Warna hijau untuk Aktif -->
+                            <div class="ui green label">Aktif</div> <!-- Badge hijau untuk Aktif -->
                         <?php else : ?>
-                            <span style="color: red; font-weight: bold;">Tidak Aktif</span> <!-- Warna putih untuk Tidak Aktif dengan latar belakang merah -->
+                            <div class="ui red label">Tidak Aktif</div> <!-- Badge merah untuk Tidak Aktif -->
                         <?php endif; ?>
                     </td>
                     <td>

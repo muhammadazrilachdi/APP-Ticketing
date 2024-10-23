@@ -31,7 +31,7 @@
         }
 
         .content-container {
-            margin-left: 222px;
+            margin-left: 100px;
             /* Sesuaikan dengan lebar sidebar */
             width: calc(100% - 222px);
             /* Kurangi lebar sidebar */

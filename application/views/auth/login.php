@@ -18,6 +18,8 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
+            overflow-x: hidden;
+            position: relative;
         }
 
         .container {
@@ -181,6 +183,11 @@
             transition: background-color 0.3s;
         }
 
+        .swal2-container {
+            position: fixed !important;
+            z-index: 9999 !important;
+        }
+
         .button i {
             margin-right: 8px;
             /* Jarak antara ikon dan teks */
@@ -306,6 +313,11 @@
                 customClass: {
                     confirmButton: 'btn-whatsapp',
                 },
+                backdrop: true,
+                position: 'center', // Menambahkan ini
+                allowOutsideClick: false, // Optional: mencegah klik di luar modal
+                scrollbarPadding: false, // Menambahkan ini untuk mencegah pergeseran
+                heightAuto: false, // Menambahkan ini untuk mengontrol tinggi
             }).then((result) => {
                 if (result.isConfirmed) {
                     window.open('https://wa.me/6281282150702', '_blank');

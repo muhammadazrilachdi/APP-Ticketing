@@ -24,6 +24,9 @@ class Priority_model extends CI_Model
     }
     public function insert($data)
     {
+        $user = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+        $data['created_by'] = $user['user_id'];
+        $data['created_at'] = date('Y-m-d H:i:s');
         return $this->db->insert('priority', $data);
     }
     public function update($update_data)

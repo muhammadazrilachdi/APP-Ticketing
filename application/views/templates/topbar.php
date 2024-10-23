@@ -1,10 +1,10 @@
 <body>
     <div class="top-bar">
-        <div class="sidebar-text">Management System Ticketing</div>
+        <div class="sidebar-text" style="color: darkgray;">Management System Ticketing</div>
         <div class="date-time">
-            <p id="date"></p>
+            <p id="date" style="color: darkgray;"></p>
             <div class="separator"></div>
-            <p id="time"></p>
+            <p id="time" style="color: darkgrey;"></p>
             <div class="separator"></div>
         </div>
     </div>

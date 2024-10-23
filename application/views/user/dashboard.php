@@ -9,6 +9,7 @@
     <link href="https://fonts.googleapis.com/css?family=Montserrat|Lato" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="shortcut icon" href="<?= base_url('asset/images/persada.png'); ?>" type="image/png" />
@@ -46,6 +47,7 @@
         .container-fluid {
             padding: 60px 50px;
             margin-top: -30px;
+
         }
 
         .navbar {
@@ -396,7 +398,7 @@
             <div class="collapse navbar-collapse" id="myNavbar">
                 <ul class="nav navbar-nav navbar-right custom-nav">
                     <li><a href="#about">ABOUT</a></li>
-                    <li><a href="#services">REQUEST</a></li>
+                    <li><a href="#request">REQUEST</a></li>
                     <li><a href="<?php echo site_url('user/dashboard/profile'); ?>">PROFILE</a></li>
                     <li><a href="<?php echo site_url('user/dashboard/contact'); ?>">CONTACT</a></li>
                     <li><a href="#" onclick="confirmLogout(event)">LOGOUT</a></li>
@@ -414,9 +416,6 @@
 
         <!-- Modal -->
     </div>
-
-
-
 
     <div id="about" class="container-fluid bg-grey">
         <div class="row">
@@ -443,7 +442,7 @@
                 </div>
             </div>
 
-            <table class="ui celled table" style="margin-top: 20px;">
+            <table class="display" id="table-ticket" style="margin-top: 20px;">
                 <thead>
                     <tr>
                         <th>No Ticket</th>
@@ -461,10 +460,9 @@
                     $request = $this->Request_model->get_request_by_user($_SESSION['user_id']);
                     if (empty($request)) : ?>
                         <tr>
-                            <td colspan="7" style="text-align: center;">Tidak ada tiket yang tersedia.</td>
+                            <td colspan="8" style="text-align: center;">Tidak ada tiket yang tersedia.</td>
                         </tr>
-                        <?php else:
-                        // Mapping status_id ke nama status
+                        <?php else :
                         $statusMap = [
                             '1' => 'Menunggu Antrean',
                             '2' => 'Sedang Diproses',
@@ -473,27 +471,24 @@
 
                         foreach ($request as $row) :
                             $statusNameValue = isset($statusMap[$row['status_id']]) ? $statusMap[$row['status_id']] : 'Status Tidak Ditemukan';
+                            $statusClass = 'default'; // Default class
 
-                            $statusColor = 'gray';
                             switch ($statusNameValue) {
                                 case 'Menunggu Antrean':
-                                    $statusColor = 'red';
+                                    $statusClass = 'red'; // Merah
                                     break;
                                 case 'Sedang Diproses':
-                                    $statusColor = 'yellow';
+                                    $statusClass = 'yellow'; // Kuning
                                     break;
                                 case 'Selesai':
-                                    $statusColor = 'green';
+                                    $statusClass = 'green'; // Hijau
                                     break;
                             }
-
-                            // Pastikan status ditampilkan dengan benar
                             $statusNameDisplay = htmlspecialchars($statusNameValue);
                         ?>
                             <tr>
                                 <td>
-                                    <a
-                                        href="<?php echo site_url('user/request/detail_ticket/' . $row['no_ticket']); ?>" class="ui button">
+                                    <a href="<?php echo site_url('user/request/detail_ticket/' . $row['no_ticket']); ?>" class="btn btn-link">
                                         <?php echo htmlspecialchars($row['no_ticket']); ?>
                                     </a>
                                 </td>
@@ -503,303 +498,321 @@
                                 <td><?php echo htmlspecialchars($row['topic']); ?></td>
                                 <td><?php echo htmlspecialchars($row['description']); ?></td>
                                 <td>
-                                    <span style="padding: 5px 10px; background-color: <?php echo $statusColor; ?>; color: black; font-weight: bold; border-radius: 5px; font-size: 16px; font-style: italic; display: inline-block;">
+                                    <div class="ui <?php echo $statusClass; ?> label">
                                         <?php echo $statusNameDisplay; ?>
-                                    </span>
+                                    </div>
                                 </td>
                                 <td><?php echo htmlspecialchars($row['feedback']); ?></td>
                             </tr>
                     <?php endforeach;
                     endif; ?>
                 </tbody>
+
             </table>
 
-            <div class="container-fluid bg-grey">
+            <div class="container-fluid bg-grey" id="request">
                 <div class="row">
-                    <div class="col-sm-8">
-                        <div class="ui segment custom">
-                            <h3 class="ticket-title">Buat Ticket Baru</h3>
-                            <p class="ticket-teks">Isi formulir di bawah ini untuk membuat ticket baru. Pastikan semua informasi yang diberikan akurat.</p>
-                            <form id="request-form" class="ui form" method="post" action="<?php echo site_url('user/request/create_request'); ?>" enctype="multipart/form-data">
-                                <!-- ... field lainnya ... -->
-                                <div class="field">
-                                    <label>Kategori</label>
-                                    <select name="category_id" class="ui dropdown" required>
-                                        <option value="0">--Pilih-Kategori-Anda--</option>
-                                        <?php foreach ($category as $cat) { ?>
-                                            <option value="<?php echo $cat['category_id']; ?>"><?php echo $cat['name']; ?></option>
-                                        <?php } ?>
-                                    </select>
-                                    <small class="ui pointing label">Pilih kategori yang sesuai untuk ticket Anda.</small>
-                                </div>
+                    <h3 class="ticket-title" style="margin-left: 18px;">Buat Ticket Baru</h3>
+                    <p class="ticket-teks" style="margin-left: 18px;">Isi formulir di bawah ini untuk membuat ticket baru. Pastikan semua informasi yang diberikan akurat.</p>
 
-                                <div class="field">
-                                    <label>Prioritas</label>
-                                    <select name="priority_id" class="ui dropdown" required>
-                                        <option value="0">--Pilih-Prioritas-Anda--</option>
-                                        <?php foreach ($priority as $pri) { ?>
-                                            <option value="<?php echo $pri['priority_id']; ?>"><?php echo $pri['name']; ?></option>
-                                        <?php } ?>
-                                    </select>
-                                    <small class="ui pointing label">Tentukan tingkat prioritas ticket Anda.</small>
-                                </div>
+                    <div class="col-md-8">
+                        <form id="request-form" class="ui form" method="post" action="<?php echo site_url('user/request/create_request'); ?>" enctype="multipart/form-data"
+                            style="padding: 20px; border: 1px solid #ccc; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); width: 100%;">
 
-                                <div class="field">
-                                    <label>Topik</label>
-                                    <textarea name="topic" rows="1" required></textarea>
-                                    <small class="ui pointing label">Masukkan topik singkat tentang masalah Anda.</small>
-                                </div>
+                            <table style="width: 100%; border-collapse: collapse;">
+                                <tbody>
+                                    <tr>
+                                        <td style="padding: 10px; border: 1px solid #ddd;">
+                                            <label style="font-weight: bold;">Kategori</label>
+                                            <select name="category_id" class="ui dropdown" required
+                                                style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
+                                                <option value="0">--Pilih-Kategori-Anda--</option>
+                                                <?php foreach ($category as $cat) { ?>
+                                                    <option value="<?php echo $cat['category_id']; ?>"><?php echo $cat['name']; ?></option>
+                                                <?php } ?>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 10px; border: 1px solid #ddd;">
+                                            <label style="font-weight: bold;">Prioritas</label>
+                                            <select name="priority_id" class="ui dropdown" required
+                                                style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
+                                                <option value="0">--Pilih-Prioritas-Anda--</option>
+                                                <?php foreach ($priority as $pri) { ?>
+                                                    <option value="<?php echo $pri['priority_id']; ?>"><?php echo $pri['name']; ?></option>
+                                                <?php } ?>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 10px; border: 1px solid #ddd;">
+                                            <label style="font-weight: bold;">Topik</label>
+                                            <textarea name="topic" rows="1" required
+                                                style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;"></textarea>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 10px; border: 1px solid #ddd;">
+                                            <label style="font-weight: bold;">Deskripsi</label>
+                                            <textarea name="description" rows="3" required
+                                                style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;"></textarea>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 10px; border: 1px solid #ddd;">
+                                            <label style="font-weight: bold;">Lampiran</label>
+                                            <input type="file" name="lampiran" id="lampiran" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+                                                style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
 
-                                <div class="field">
-                                    <label>Deskripsi</label>
-                                    <textarea name="description" rows="3" required></textarea>
-                                    <small class="ui pointing label">Jelaskan masalah Anda secara rinci.</small>
-                                </div>
-                                <div class="field">
-                                    <label>Lampiran</label>
-                                    <input type="file" name="lampiran" id="lampiran" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
-                                    <small class="ui pointing label">Upload file pendukung (opsional). Max 2MB.</small>
-                                </div>
+                            <button class="ui secondary button" type="submit"
+                                style="background-color: #444; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; margin-top: 15px;">
+                                Submit
+                            </button>
+                        </form>
+                    </div>
 
-                                <button class="ui secondary button" type="submit">Submit</button>
-                            </form>
-                        </div>
+                    <div class="col-md-4" style="padding: 20px;">
+                        <h4 style="margin-bottom: 15px;">Tatacara Pengisian</h4>
+                        <p style="margin-bottom: 10px;">Berikut adalah langkah-langkah untuk mengisi formulir:</p>
+                        <ol>
+                            <li><strong>Pilih kategori:</strong> Tentukan kategori yang sesuai untuk masalah Anda.</li>
+                            <li><strong>Tentukan prioritas:</strong> Pilih tingkat prioritas sesuai urgensi masalah.</li>
+                            <li><strong>Isi topik:</strong> Masukkan ringkasan singkat tentang masalah yang Anda hadapi.</li>
+                            <li><strong>Deskripsi lengkap:</strong> Jelaskan masalah Anda dengan detail.</li>
+                            <li><strong>Lampirkan file:</strong> Upload file pendukung jika diperlukan (opsional), max 2MB, hanya bisa file bertipe gif|jpg|png|pdf|doc|docx</li>
+                            <li><strong>Submit:</strong> Klik tombol submit untuk mengirimkan ticket Anda.</li>
+                        </ol>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div class="separator"></div>
-            <footer class="footer">
-                <a href="#myPage" title="To Top">
-                    <span class="glyphicon glyphicon-chevron-up"></span>
-                </a>
-                <p>&copy; 2024 System Ticketing</p>
-                <p class="powered">Powered BY IT APP</p>
-            </footer>
+        <div id="footerLink" style="display: none;">
+            <a href="<?php echo site_url('user/request/detail_ticket/' . $row['no_ticket']); ?>">Klik Disini Untuk Lihat Status Dan No.Status</a>
+        </div>
 
+        <div class="separator"></div>
+        <footer class="footer">
+            <a href="#myPage" title="To Top">
+                <span class="glyphicon glyphicon-chevron-up"></span>
+            </a>
+            <p>&copy; 2024 System Ticketing</p>
+            <p class="powered">Powered BY IT APP</p>
+        </footer>
 
-            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-            <script>
-                let typingActive = false; // Menandakan apakah typing sedang aktif
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script>
+            $(document).ready(function() {
+                $('#table-ticket').DataTable({
+                    "ordering": true,
+                    "searching": true,
+                    "paging": true
+                });
+            });
 
-                function typeWriter(text, elementId, delay) {
-                    let i = 0;
-                    const element = document.getElementById(elementId);
-                    element.innerHTML = ''; // Clear previous content
+            let typingActive = false; // Menandakan apakah typing sedang aktif
 
-                    function type() {
-                        if (i < text.length) {
-                            element.innerHTML += text.charAt(i);
-                            i++;
-                            setTimeout(type, delay);
-                        } else {
-                            typingActive = false; // Menandakan bahwa typing telah selesai
-                        }
-                    }
-                    type();
+            function typeWriter(text, elementId, delay) {
+                let i = 0;
+                const element = document.getElementById(elementId);
+                element.innerHTML = ''; // Clear previous content
 
-                    function handleFormSubmit() {
-                        alert('Request berhasil ditambahkan!');
-
-                        document.getElementById('request-form').reset();
-
-                        return false; // Cegah form dari submit biasa
-                    }
-
-                }
-                document.getElementById('lampiran').addEventListener('change', function(e) {
-                    var file = e.target.files[0];
-                    var fileInfo = document.getElementById('file-info');
-
-                    if (file) {
-                        // Cek ukuran file (dalam bytes)
-                        if (file.size > 2 * 1024 * 1024) { // 2MB
-                            fileInfo.innerHTML = '<p style="color: red;">File terlalu besar. Maksimum 2MB.</p>';
-                            e.target.value = ''; // Reset input file
-                        } else {
-                            fileInfo.innerHTML = '<p>File yang dipilih: ' + file.name + ' (' + (file.size / 1024).toFixed(2) + ' KB)</p>';
-                        }
+                function type() {
+                    if (i < text.length) {
+                        element.innerHTML += text.charAt(i);
+                        i++;
+                        setTimeout(type, delay);
                     } else {
-                        fileInfo.innerHTML = '';
+                        typingActive = false; // Menandakan bahwa typing telah selesai
                     }
-                });
-                document.addEventListener('DOMContentLoaded', function() {
-                    document.getElementById('request-form').addEventListener('submit', function(e) {
-                        e.preventDefault();
+                }
+                type();
 
+                function handleFormSubmit() {
+                    alert('Request berhasil ditambahkan!');
 
-                        var form = this;
-                        var isValid = true;
-                        form.querySelectorAll('input[required], select[required], textarea[required]').forEach(function(element) {
-                            if (!element.value.trim()) {
-                                isValid = false;
-                                element.classList.add('error');
-                            } else {
-                                element.classList.remove('error');
-                            }
-                        });
+                    document.getElementById('request-form').reset();
 
-                        if (!isValid) {
-                            alert('Semua field wajib diisi!');
-                            return;
-                        }
-
-                        // Validasi ukuran file
-                        var fileInput = document.getElementById('lampiran');
-                        if (fileInput.files.length > 0) {
-                            if (fileInput.files[0].size > 2 * 1024 * 1024) {
-                                alert('Ukuran file terlalu besar. Maksimum 2MB.');
-                                return;
-                            }
-                        }
-
-                        form.submit();
-                    });
-                });
-
-                function confirmLogout(event) {
-                    event.preventDefault(); // Prevent the default anchor action
-                    $('#logout-message').fadeIn(); // Show the logout confirmation
+                    return false; // Cegah form dari submit biasa
                 }
 
-                document.querySelector('.scroll-down a').addEventListener('click', function(event) {
-                    event.preventDefault(); // Prevent the default anchor click behavior
-
-                    const targetId = this.getAttribute('href'); // Get the target section ID
-                    const targetElement = document.querySelector(targetId); // Find the target element
-
-                    // Custom smooth scroll function
-                    const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset;
-                    const startPosition = window.pageYOffset;
-                    const distance = targetPosition - startPosition;
-                    const duration = 1500; // Adjust this value for slower or faster scroll
-                    let startTime = null;
-
-                    function animation(currentTime) {
-                        if (startTime === null) startTime = currentTime;
-                        const timeElapsed = currentTime - startTime;
-                        const progress = Math.min(timeElapsed / duration, 1); // Ensure progress is between 0 and 1
-                        const ease = easeInOutQuad(progress); // Easing function
-                        window.scrollTo(0, startPosition + distance * ease);
-
-                        if (timeElapsed < duration) requestAnimationFrame(animation);
-                    }
-
-                    function easeInOutQuad(t) {
-                        return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
-                    }
-
-                    requestAnimationFrame(animation);
-                });
-
-                $(document).ready(function() {
-                    // Tampilkan modal jika ada pesan
-                    if ($('.ui.message').length) {
-                        $('#alertModal').css('display', 'block');
-                    }
-
-                    // Tutup modal ketika tombol close ditekan
-                    $('.close-button').on('click', function() {
-                        $('#alertModal').css('display', 'none');
-                    });
-
-                    // Tutup modal ketika klik di luar modal
-                    $('#statusLink').on('click', function() {
-                        $('#alertModal').css('display', 'none');
-                    });
-                });
+            }
+            document.addEventListener('DOMContentLoaded', function() {
+                document.getElementById('request-form').addEventListener('submit', function(e) {
+                    e.preventDefault();
 
 
-                $(document).ready(function() {
-                    $('#read-more').on('click', function() {
-                        const infoText = "Sistem Ticketing adalah solusi untuk mengelola dan menyelesaikan permintaan dukungan teknis.";
-                        if (!typingActive) {
-                            typingActive = true; // Menandakan bahwa typing sedang aktif
-                            $('#info').hide().fadeIn(); // Show the info div
-                            typeWriter(infoText, 'info', 50); // Call the typing animation
-                        }
-                    });
-
-                    $('#myNavbar a[data-target="#profileModal"]').on('click', function() {
-                        $('#profileModal').modal('show');
-                    });
-
-                    $('#confirm-logout').on('click', function() {
-                        $('#logout-message').fadeOut(300, function() {
-                            window.location.href = "<?php echo site_url('auth/logout'); ?>"; // Redirect to logout URL
-                        });
-                    });
-
-                    $('#cancel-logout').on('click', function() {
-                        $('#logout-message').fadeOut(300); // Hide the logout message with animation
-                    });
-
-                    // Smooth scrolling for navbar and footer links
-                    $(".navbar a, footer a[href='#myPage']").on('click', function(event) {
-                        if (this.hash !== "") {
-                            event.preventDefault();
-                            var hash = this.hash;
-                            $('html, body').animate({
-                                scrollTop: $(hash).offset().top
-                            }, 900, function() {
-                                window.location.hash = hash;
-                            });
-                        }
-                    });
-
-                    // Change navbar style on scroll
-                    $(window).on('scroll', function() {
-                        if ($(this).scrollTop() > 50) { // Adjust this value as needed
-                            $('.navbar').addClass('scrolled');
+                    var form = this;
+                    var isValid = true;
+                    form.querySelectorAll('input[required], select[required], textarea[required]').forEach(function(element) {
+                        if (!element.value.trim()) {
+                            isValid = false;
+                            element.classList.add('error');
                         } else {
-                            $('.navbar').removeClass('scrolled');
+                            element.classList.remove('error');
                         }
                     });
+
+                    if (!isValid) {
+                        alert('Semua field wajib diisi!');
+                        return;
+                    }
+
+                    form.submit();
                 });
+            });
 
-                document.addEventListener('DOMContentLoaded', function() {
-                    <?php if (!empty($message)): ?>
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: '<?php echo addslashes($message); ?>'
-                        });
-                    <?php endif; ?>
+            function confirmLogout(event) {
+                event.preventDefault(); // Prevent the default anchor action
+                $('#logout-message').fadeIn(); // Show the logout confirmation
+            }
 
-                    <?php if ($this->session->flashdata('success')): ?>
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Berhasil!',
-                            text: '<?php echo addslashes($this->session->flashdata('success')); ?>',
-                            footer: '<a href="#services" id="statusLink">Klik Disini Untuk Lihat Status Dan No.Status</a>'
-                        });
-                    <?php endif; ?>
+            document.querySelector('.scroll-down a').addEventListener('click', function(event) {
+                event.preventDefault(); // Prevent the default anchor click behavior
 
-                    <?php if ($this->session->flashdata('error')): ?>
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Gagal!',
-                            text: '<?php echo addslashes($this->session->flashdata('error')); ?>'
-                        });
-                    <?php endif; ?>
-                });
+                const targetId = this.getAttribute('href'); // Get the target section ID
+                const targetElement = document.querySelector(targetId); // Find the target element
 
-                function confirmLogout(event) {
-                    event.preventDefault(); // Mencegah aksi default tautan
-                    Swal.fire({
-                        title: 'Apakah Anda yakin ingin logout?',
-                        icon: 'question',
-                        showCancelButton: true,
-                        confirmButtonText: 'Ya',
-                        cancelButtonText: 'Tidak'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            // Ganti dengan URL logout yang benar
-                            window.location.href = '<?php echo site_url('auth/logout'); ?>'; // Misalnya, '/logout'
-                        }
-                    });
+                // Custom smooth scroll function
+                const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset;
+                const startPosition = window.pageYOffset;
+                const distance = targetPosition - startPosition;
+                const duration = 1500; // Adjust this value for slower or faster scroll
+                let startTime = null;
+
+                function animation(currentTime) {
+                    if (startTime === null) startTime = currentTime;
+                    const timeElapsed = currentTime - startTime;
+                    const progress = Math.min(timeElapsed / duration, 1); // Ensure progress is between 0 and 1
+                    const ease = easeInOutQuad(progress); // Easing function
+                    window.scrollTo(0, startPosition + distance * ease);
+
+                    if (timeElapsed < duration) requestAnimationFrame(animation);
                 }
-            </script>
+
+                function easeInOutQuad(t) {
+                    return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+                }
+
+                requestAnimationFrame(animation);
+            });
+
+            $(document).ready(function() {
+                // Tampilkan modal jika ada pesan
+                if ($('.ui.message').length) {
+                    $('#alertModal').css('display', 'block');
+                }
+
+                // Tutup modal ketika tombol close ditekan
+                $('.close-button').on('click', function() {
+                    $('#alertModal').css('display', 'none');
+                });
+
+                // Tutup modal ketika klik di luar modal
+                $('#statusLink').on('click', function() {
+                    $('#alertModal').css('display', 'none');
+                });
+            });
+
+
+            $(document).ready(function() {
+                $('#read-more').on('click', function() {
+                    const infoText = "Sistem Ticketing adalah solusi untuk mengelola dan menyelesaikan permintaan dukungan teknis.";
+                    if (!typingActive) {
+                        typingActive = true; // Menandakan bahwa typing sedang aktif
+                        $('#info').hide().fadeIn(); // Show the info div
+                        typeWriter(infoText, 'info', 50); // Call the typing animation
+                    }
+                });
+
+                $('#myNavbar a[data-target="#profileModal"]').on('click', function() {
+                    $('#profileModal').modal('show');
+                });
+
+                $('#confirm-logout').on('click', function() {
+                    $('#logout-message').fadeOut(300, function() {
+                        window.location.href = "<?php echo site_url('auth/logout'); ?>"; // Redirect to logout URL
+                    });
+                });
+
+                $('#cancel-logout').on('click', function() {
+                    $('#logout-message').fadeOut(300); // Hide the logout message with animation
+                });
+
+                // Smooth scrolling for navbar and footer links
+                $(".navbar a, footer a[href='#myPage']").on('click', function(event) {
+                    if (this.hash !== "") {
+                        event.preventDefault();
+                        var hash = this.hash;
+                        $('html, body').animate({
+                            scrollTop: $(hash).offset().top
+                        }, 900, function() {
+                            window.location.hash = hash;
+                        });
+                    }
+                });
+
+                // Change navbar style on scroll
+                $(window).on('scroll', function() {
+                    if ($(this).scrollTop() > 50) { // Adjust this value as needed
+                        $('.navbar').addClass('scrolled');
+                    } else {
+                        $('.navbar').removeClass('scrolled');
+                    }
+                });
+            });
+
+            document.addEventListener('DOMContentLoaded', function() {
+                <?php if (!empty($message)): ?>
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: '<?php echo addslashes($message); ?>'
+                    });
+                <?php endif; ?>
+
+                <?php if ($this->session->flashdata('success')): ?>
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil!',
+                        text: '<?php echo addslashes($this->session->flashdata('success')); ?>',
+                        footer: document.getElementById('footerLink').innerHTML // Ambil HTML dari footerLink
+                    });
+                <?php endif; ?>
+
+                <?php if ($this->session->flashdata('error')): ?>
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Gagal!',
+                        text: '<?php echo addslashes($this->session->flashdata('error')); ?>'
+                    });
+                <?php endif; ?>
+            });
+
+            function confirmLogout(event) {
+                event.preventDefault(); // Mencegah aksi default tautan
+                Swal.fire({
+                    title: 'Apakah Anda yakin ingin logout?',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Ya',
+                    cancelButtonText: 'Tidak'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Ganti dengan URL logout yang benar
+                        window.location.href = '<?php echo site_url('auth/logout'); ?>'; // Misalnya, '/logout'
+                    }
+                });
+            }
+        </script>
 </body>
 
 </html>
