@@ -63,7 +63,9 @@
                                             <?php echo $row['status_name']; ?>
                                         </div>
                                     </td>
-                                    <td><?php echo $row['feedback']; ?></td>
+                                    <td style="padding: 10px; white-space: normal; word-wrap: break-word;">
+                                        <?php echo $row['feedback']; ?>
+                                    </td>
                                     <td>
                                         <a href="<?php echo site_url('admin/transaksi/detail/' . $row['no_ticket']); ?>" class="ui grey button">
                                             Detail
@@ -123,7 +125,9 @@
                                             <?php echo $row['status_name']; ?>
                                         </div>
                                     </td>
-                                    <td style="padding: 10px; white-space: nowrap;"><?php echo $row['feedback']; ?></td>
+                                    <td style="padding: 10px; white-space: normal; word-wrap: break-word;">
+                                        <?php echo $row['feedback']; ?>
+                                    </td>
                                     <td style="padding: 10px; display: flex; justify-content: center;">
                                         <a href="<?php echo site_url('admin/transaksi/detail/' . $row['no_ticket']); ?>" class="ui grey button">
                                             Detail

@@ -10,7 +10,7 @@ class Priority_model extends CI_Model
                   LEFT JOIN `request` 
                          ON `priority`.`priority_id` = `request`.`priority_id`
                       WHERE `request`.`priority_id` = 1
-                   ORDER BY `request`.`priority_id` ASC
+                   ORDER BY `request`.`created_at` ASC
                    ";
         $priority_id = $this->db->query($queryPriority)->result_array();
     }

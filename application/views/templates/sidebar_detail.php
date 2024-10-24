@@ -11,7 +11,7 @@
     <img src="<?= base_url('asset/images/logo_app.png'); ?>" alt="Logo" style="width: 40px; display: block; margin: 10px auto;">
     <div style="height: 1px; background-color: #444; margin: 10px 0;"></div>
 
-    <a class="nav-link" href="<?php echo site_url('admin/transaksi'); ?>" style="display: flex; align-items: center; justify-content: center; padding: 10px; text-decoration: none; color: #fff;" data-tooltip="Transaksi" data-position="right center" data-inverted="">
+    <a class="nav-link" href="<?php echo site_url('admin/transaksi'); ?>" style="display: flex; align-items: center; justify-content: center; padding: 10px; text-decoration: none; color: #fff;" data-tooltip="Back" data-position="right center" data-inverted="">
         <i class="fa-solid fa-chevron-left" style="margin-right: 5px;"></i>
     </a>
 </div>

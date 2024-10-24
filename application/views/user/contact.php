@@ -304,9 +304,9 @@
         <p> Hubungi Admin System Ticketing</p>
         <div class="contact-info">
             <p>
-                <a href="https://wa.me/6281282150702" target="_blank" class="icon whatsapp">
+                <a href="https://wa.me/6289622957132" target="_blank" class="icon whatsapp">
                     <i class="fa-brands fa-whatsapp"></i>
-                    081282150702
+                    081289622957132
                 </a>
             </p>
             <p>
@@ -316,9 +316,9 @@
                 </a>
             </p>
             <p>
-                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=muhammad.azril.achdi@gmail.com" class="icon email" target="_blank">
+                <a href="mailto:Business@app.id" class="icon email" target="_blank">
                     <i class="fa-regular fa-envelope"></i>
-                    IT.app@gmail.com
+                    Business@app.id
                 </a>
 
             </p>

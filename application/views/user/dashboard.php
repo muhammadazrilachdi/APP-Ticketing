@@ -15,7 +15,8 @@
     <link rel="shortcut icon" href="<?= base_url('asset/images/persada.png'); ?>" type="image/png" />
     <style>
         body {
-            font: 400 15px Lato, sans-serif;
+            font: 400 1rem Lato, sans-serif;
+            /* Gunakan rem untuk ukuran font */
             line-height: 1.8;
             color: #818181;
         }
@@ -40,21 +41,22 @@
         }
 
         .jumbotron h1 {
-            margin-top: 50px;
-            margin-bottom: -25px;
+            margin-top: 5vh;
+            /* Gunakan vh untuk responsivitas vertikal */
+            margin-bottom: -2vh;
         }
 
         .container-fluid {
-            padding: 60px 50px;
-            margin-top: -30px;
-
+            padding: 4vw 3vw;
+            /* Gunakan vw untuk padding */
         }
 
         .navbar {
             margin-bottom: 0;
             background-color: transparent;
             border: 0;
-            font-size: 10px !important;
+            font-size: 0.625rem;
+            /* Ganti dengan rem */
             border-radius: 0;
             font-family: Montserrat, sans-serif;
         }
@@ -77,12 +79,12 @@
         .navbar-nav li.active a {
             color: #f4511e !important;
             background-color: #fff !important;
-            border-bottom-left-radius: 30px;
-            border-top-right-radius: 30px;
-            border-bottom-right-radius: 10px;
-            border-top-left-radius: 10px;
+            border-radius: 30px 30px 10px 10px;
+        }
 
-
+        .footer-section {
+            margin: 0 2vw;
+            /* Ganti margin ke vw */
         }
 
         .logout-message {
@@ -151,10 +153,6 @@
             padding: 15px 20px;
         }
 
-        .ui.segment.custom {
-            left: 250px;
-        }
-
         #info {
             background: transparent;
             backdrop-filter: blur(2px);
@@ -182,11 +180,7 @@
 
         .custom-nav {
             background-color: rgba(248, 249, 250, 0.8);
-            border-bottom-left-radius: 30px;
-            border-top-right-radius: 30px;
-            border-bottom-right-radius: 10px;
-            border-top-left-radius: 10px;
-
+            border-radius: 30px 30px 10px 10px;
         }
 
         .custom-nav li {
@@ -219,7 +213,6 @@
             background-color: #007bff;
             /* Warna garis */
             transition: width 0.4s ease, left 0.4s ease;
-
         }
 
         .scroll-down {
@@ -256,43 +249,6 @@
             }
         }
 
-        footer .glyphicon-chevron-up {
-            color: red;
-            font-size: 20px;
-            transition: color 0.3s;
-        }
-
-        footer .glyphicon-chevron-up:hover {
-            color: red;
-        }
-
-        .footer {
-            margin-top: 10px;
-            margin-bottom: -60px;
-            margin-left: -50px;
-            margin-right: -50px;
-            padding: 20px;
-            /* Atur padding atas dan bawah */
-            text-align: center;
-            /* Pusatkan teks */
-            background-color: #f8f8f8;
-            border-top: 1px solid #ddd;
-            /* Tambahkan garis pemisah di atas footer */
-        }
-
-        .footer a {
-            display: inline-block;
-            /* Mengatur tampilan link */
-            margin-bottom: 10px;
-            /* Jarak bawah untuk link */
-        }
-
-        .powered {
-            color: blue;
-            /* atau gunakan kode warna seperti #0000FF */
-        }
-
-
         .modal {
             display: none;
             /* Tersembunyi secara default */
@@ -308,8 +264,6 @@
             /* Tinggi penuh */
             overflow: auto;
             /* Membuat scroll jika perlu */
-            background-color: rgb(0, 0, 0);
-            /* Warna latar belakang gelap */
             background-color: rgba(0, 0, 0, 0.4);
             /* Dengan transparansi */
         }
@@ -381,6 +335,46 @@
             margin-right: 10px;
             color: #FF69B4;
             /* red color */
+        }
+
+        /* Media Queries for Responsiveness */
+        @media (max-width: 768px) {
+            .navbar {
+                font-size: 0.5rem;
+                /* Sesuaikan ukuran font pada layar kecil */
+            }
+
+            .jumbotron h1 {
+                font-size: 1.5rem;
+                /* Sesuaikan ukuran font judul */
+            }
+
+            .container-fluid {
+                padding: 2vw;
+                /* Sesuaikan padding */
+            }
+
+            .footer-section {
+                margin: 0 1vw;
+                /* Sesuaikan margin footer */
+            }
+        }
+
+        @media (max-width: 480px) {
+            .navbar {
+                font-size: 0.4rem;
+                /* Lebih kecil untuk perangkat sangat kecil */
+            }
+
+            .jumbotron h1 {
+                font-size: 1.2rem;
+                /* Ukuran lebih kecil untuk judul */
+            }
+
+            .container-fluid {
+                padding: 1.5vw;
+                /* Padding lebih kecil */
+            }
         }
     </style>
 </head>
@@ -597,13 +591,41 @@
         </div>
 
         <div class="separator"></div>
-        <footer class="footer">
-            <a href="#myPage" title="To Top">
-                <span class="glyphicon glyphicon-chevron-up"></span>
-            </a>
-            <p>&copy; 2024 System Ticketing</p>
-            <p class="powered">Powered BY IT APP</p>
+        <footer class="footer" style="margin: 10px -50px -60px -50px; padding: 20px; text-align: left; background-color: #f8f8f8; border-top: 1px solid #ddd; display: flex; flex-direction: column; align-items: flex-start;">
+            <div class="footer-sections" style="display: flex; justify-content: center; width: 100%; margin-top: 10px; margin-bottom: 20px;"> <!-- Ubah justify-content ke flex-start -->
+                <div class="footer-content" style="display: flex; align-items: center; margin-bottom: 15px; font-size: 0.9em; margin-left: 100px; margin-top: 10px;">
+                    <img src="<?= base_url('asset/images/persada.png'); ?>" alt="Logo" class="footer-logo" style="width: 40px; height: auto; margin-right: 5px;">
+                    <span class="separator" style="margin: 0 5px;">|</span>
+                    <p> System Ticketing</p>
+                </div>
+
+                <div class="footer-section" style="margin: 0 80px; max-width: 200px;">
+                    <h3 style="margin-bottom: 5px;">Informasi</h3> <!-- Mengurangi margin bawah h3 -->
+                    <p><span style="font-weight: bold;">Email Dukungan: </span><a href="mailto:Business@app.id" target="_blank">Business@app.id</a></p>
+                    <p style="margin: 0;"><span style="font-weight: bold;">Jam Operasional:</span></p>
+                    <p style="margin: 0;">Senin - Jumat, 08:00 - 17:00</p> <!-- Mengurangi margin -->
+                </div>
+
+                <div class="footer-section" style="margin: 0 40px; margin-right: 100px; max-width: 200px;">
+                    <h3>Media Sosial</h3>
+                    <a href="https://www.facebook.com/adhipersadaproperti?mibextid=ZbWKwL" target="_blank" style="margin-right: 10px; color: #3b5998;"><i class="fab fa-facebook"></i></a>
+                    <a href="https://x.com/Adhiproperti?t=RWGqjbsCedCFb4qBThLIsw&s=09" target="_blank" style="margin-right: 10px; color: #1DA1F2;"><i class="fab fa-twitter"></i></a>
+                    <a href="https://www.instagram.com/adhipersadaproperti?igsh=MTR0ZGE5ZjJ5NXM3dg==" target="_blank" style="margin-right: 10px; color: #C13584;"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.linkedin.com/company/adhipersadaproperti/" target="_blank" style="color: #0077b5;"><i class="fab fa-linkedin"></i></a>
+                </div>
+
+                <div class="footer-section" style="margin: 0 80px; max-width: 200px;">
+                    <h3>Lokasi</h3>
+                    <p style="margin: 0;">Grand Dhika City, Tower Arlington, Jl. Raya Hankam, Jatiwarna, Jawa Barat.</p>
+                </div>
+            </div>
+            <div class="footer-copyright"></div>
+            <hr class="footer-divider" style="margin: 20px 0; width: 100%; border: none; border-top: 1px solid #ddd; position: relative; left: 50%; transform: translateX(-50%);">
+            <p class="powered" style="color: blue; margin-top: 4px; text-align: center; width: 100%;">
+                Powered By <a href="https://app.id" target="_blank" style="color: blue; text-decoration: none;">IT APP</a>
+            </p>
         </footer>
+
 
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>

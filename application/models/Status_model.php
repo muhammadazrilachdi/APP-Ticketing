@@ -10,7 +10,7 @@ class Status_model extends CI_Model
                   LEFT JOIN `request` 
                          ON `status`.`status_id` = `request`.`status`
                       WHERE `request`.`status` = 1
-                   ORDER BY `request`.`status` ASC
+                   ORDER BY `request`.`created_at` ASC
                    ";
         $status_id = $this->db->query($queryStatus)->result_array();
     }

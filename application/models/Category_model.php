@@ -10,7 +10,7 @@ class Category_model extends CI_Model
                   LEFT JOIN `request` 
                          ON `category`.`category_id` = `request`.`category_id`
                       WHERE `request`.`category_id` = 1
-                   ORDER BY `request`.`category_id` ASC
+                   ORDER BY `request`.`created_at` ASC
                    ";
         $category_id = $this->db->query($queryCategory)->result_array();
     }

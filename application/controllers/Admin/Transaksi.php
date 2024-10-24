@@ -13,6 +13,7 @@ class Transaksi extends CI_Controller
         $this->load->model('Status_model');
         $this->load->model('M_user_model');
         $this->load->model('Detail_Model');
+        $this->load->model('Pic_model');
         $this->load->library('session');
         $this->load->helper('url');
         is_logged_in();
@@ -106,8 +107,23 @@ class Transaksi extends CI_Controller
             }
         }
 
-
         if ($this->Request_model->insert($data)) {
+            $request_id = $this->db->insert_id();
+
+            // $category_pic_id = $this->input->post('category_pic_id');
+            // cari ke model where karegori apa , dapet pic_id , kmudian di save pic id dan request_id ke request_category_pic
+            $get_pic_category = $this->Pic_model->pic($this->input->post('category_id'));
+            // pre($get_pic_category);
+
+            foreach ($get_pic_category as $key => $pic_category) {
+                $data_request_category_pic = [
+                    'category_pic_id'   => $pic_category['category_pic_id'],
+                    'request_id'        => $request_id
+                ];
+
+                $this->Request_model->insert_request_category_pic($data_request_category_pic);
+            }
+
             $this->session->set_flashdata('success', 'Transaksi berhasil dibuat!');
         } else {
             $this->session->set_flashdata('error', 'Gagal membuat Transaksi. Silakan coba lagi');

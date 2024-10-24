@@ -16,10 +16,12 @@ function is_logged_in()
     }
 }
 
-function pre($string)
+function pre($string, $is_die = true)
 {
     echo "<pre>";
-    print($string);
+    print_r($string);
     echo "</pre>";
-    die();
+    if($is_die){
+        die();
+    }
 }

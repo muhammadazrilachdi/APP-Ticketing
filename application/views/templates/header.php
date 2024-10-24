@@ -125,7 +125,7 @@
             content: '';
             position: absolute;
             right: 0;
-            top: 50%;
+            top: 9px;
             transform: translateY(-50%);
             width: 1px;
             height: 40px;

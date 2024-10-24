@@ -8,6 +8,7 @@ class Request extends CI_Controller
         parent::__construct();
         $this->load->model('Request_model');
         $this->load->model('Category_model');
+        $this->load->model('Pic_model');
         $this->load->model('Priority_model');
     }
 
@@ -18,7 +19,6 @@ class Request extends CI_Controller
         $data = array('categories' => $categories, 'priorities' => $priorities);
         $this->load->view('request_view', $data);
     }
-
     public function create_request()
     {
         $this->form_validation->set_rules('category_id', 'Category', 'required');
@@ -41,12 +41,14 @@ class Request extends CI_Controller
         $sequence_number = $this->Request_model->get_last_ticket_number($year);
         $no_ticket = $prefix . '.' . $year . '.' . $month . '.' . str_pad($sequence_number, 5, '0', STR_PAD_LEFT);
 
+
         $data = [
             'no_ticket' => $no_ticket,
+            'request_id' => $this->input->post('request_id'),
             'user_id_request' => $user_id_request,
             'category_id' => $this->input->post('category_id'),
             'priority_id' => $this->input->post('priority_id'),
-            'status_id' => 1, // Status awal
+            'status_id' => 1,
             'topic' => $this->input->post('topic'),
             'description' => $this->input->post('description'),
             'resource' => 'Ticketing',
@@ -54,11 +56,11 @@ class Request extends CI_Controller
             'created_by' => $user_email
         ];
 
-        // Handle file upload
+
         if (!empty($_FILES['lampiran']['name'])) {
             $config['upload_path'] = './uploads/';
             $config['allowed_types'] = 'gif|jpg|png|pdf|doc|docx';
-            $config['max_size'] = 2048; // 2MB
+            $config['max_size'] = 2048;
             $config['file_name'] = 'lampiran_' . time();
 
             $this->load->library('upload', $config);
@@ -73,7 +75,20 @@ class Request extends CI_Controller
         }
 
         if ($this->Request_model->insert($data)) {
-            $this->session->set_flashdata('success', 'Ticket berhasil dibuat dengan nomor: ' . $no_ticket);
+            $request_id = $this->db->insert_id();
+
+            $get_pic_category = $this->Pic_model->pic($this->input->post('category_id'));
+
+            foreach ($get_pic_category as $key => $pic_category) {
+                $data_request_category_pic = [
+                    'category_pic_id'   => $pic_category['category_pic_id'],
+                    'request_id'        => $request_id
+                ];
+
+                $this->Request_model->insert_request_category_pic($data_request_category_pic);
+            }
+
+            $this->session->set_flashdata('success', 'Ticket berhasil dibuat dengan nomor: ' . $data['no_ticket']);
         } else {
             $this->session->set_flashdata('error', 'Gagal membuat ticket. Silakan coba lagi.');
         }
@@ -136,7 +151,6 @@ class Request extends CI_Controller
                 'description' => $data['description'],
                 'resource' => $resource_source ? $resource_source : 'Default', // Default jika tidak ada
                 'created_at' => date('Y-m-d H:i:s'),
-                // 'created_by' => $user_email // Dihapus
             ];
 
             // Handle file lampiran dalam format base64
@@ -164,7 +178,23 @@ class Request extends CI_Controller
             }
 
             // Simpan data tiket
-            if ($this->Request_model->insert($ticket_data)) {
+            $insert_result = $this->Request_model->insert($ticket_data);
+            $request_id = $this->db->insert_id(); // Mendapatkan ID terakhir yang dimasukkan
+
+            if ($insert_result) {
+                // Ambil PIC berdasarkan category_id
+                $get_pic_category = $this->Pic_model->pic($data['category_id']); // Ganti this->input->post menjadi $data
+
+                foreach ($get_pic_category as $pic_category) {
+                    $data_request_category_pic = [
+                        'category_pic_id' => $pic_category['category_pic_id'],
+                        'request_id'      => $request_id,
+                    ];
+
+                    // Insert data ke request_category_pic
+                    $this->Request_model->insert_request_category_pic($data_request_category_pic);
+                }
+
                 echo json_encode(['success' => 'Ticket berhasil dibuat dengan nomor: ' . $no_ticket]);
             } else {
                 $this->output->set_status_header(500);
@@ -193,6 +223,12 @@ class Request extends CI_Controller
         if (!$data['ticket']) {
             show_404(); // Tampilkan halaman 404 jika tiket tidak ditemukan
         }
+
+        // Ambil request_id dari detail tiket
+        $request_id = $data['ticket']['request_id']; // Ganti dengan nama kolom yang sesuai
+
+        // Ambil kategori gambar terkait dengan tiket
+        $data['request_category_pic'] = $this->Request_model->get_request_category_pic($request_id);
 
         // Muat tampilan detail tiket
         $this->load->view('user/detail_ticket', $data);
