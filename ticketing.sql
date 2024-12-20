@@ -3,7 +3,11 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
+<<<<<<< HEAD
 -- Waktu pembuatan: 20 Des 2024 pada 03.52
+=======
+-- Waktu pembuatan: 24 Okt 2024 pada 11.55
+>>>>>>> a26f35cc9a5fe1ac8beecf7b0ec5549f53476542
 -- Versi server: 10.1.38-MariaDB
 -- Versi PHP: 5.6.40
 
@@ -130,6 +134,7 @@ CREATE TABLE `request` (
   `created_by` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+<<<<<<< HEAD
 --
 -- Dumping data untuk tabel `request`
 --
@@ -138,6 +143,8 @@ INSERT INTO `request` (`request_id`, `no_ticket`, `user_id_request`, `category_i
 (1, 'HW.2024.10.00001', 2, 2, 2, 1, 'Tes', 'Tes', NULL, 'Ticketing', NULL, 0, '2024-10-30 11:29:48', '1'),
 (2, 'SW.2024.11.00002', 2, 1, 2, 1, 'HELP', 'ujicoba', NULL, 'web/system', 'lampiran_1730949312.jpeg', 0, '2024-11-07 10:15:12', NULL);
 
+=======
+>>>>>>> a26f35cc9a5fe1ac8beecf7b0ec5549f53476542
 -- --------------------------------------------------------
 
 --
@@ -279,7 +286,11 @@ ALTER TABLE `priority`
 -- AUTO_INCREMENT untuk tabel `request`
 --
 ALTER TABLE `request`
+<<<<<<< HEAD
   MODIFY `request_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+=======
+  MODIFY `request_id` int(11) NOT NULL AUTO_INCREMENT;
+>>>>>>> a26f35cc9a5fe1ac8beecf7b0ec5549f53476542
 
 --
 -- AUTO_INCREMENT untuk tabel `status`
